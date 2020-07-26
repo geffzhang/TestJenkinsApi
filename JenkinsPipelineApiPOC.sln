@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JenkinsPipelineApiPOC", "JenkinsPipelineApiPOC\JenkinsPipelineApiPOC.csproj", "{1F796841-FE30-4A9F-A034-794ADB618101}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JenkinsPipelineApiPOC-tests", "JenkinsPipelineApiPOC-Tests\JenkinsPipelineApiPOC-tests.csproj", "{4EDB3130-BF35-4569-AA70-F2F4D23DBB57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F796841-FE30-4A9F-A034-794ADB618101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F796841-FE30-4A9F-A034-794ADB618101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F796841-FE30-4A9F-A034-794ADB618101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F796841-FE30-4A9F-A034-794ADB618101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EDB3130-BF35-4569-AA70-F2F4D23DBB57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EDB3130-BF35-4569-AA70-F2F4D23DBB57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EDB3130-BF35-4569-AA70-F2F4D23DBB57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EDB3130-BF35-4569-AA70-F2F4D23DBB57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F5EE22C-5851-4E1F-ACAB-9639B7C3549A}
+	EndGlobalSection
+EndGlobal
