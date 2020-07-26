@@ -16,11 +16,20 @@ namespace JenkinsPipelineApiPOC_tests
         }
 
         [Test]
-        public void TestWeatherForecastList()
+        public void TestWeatherForecastListCount()
         {
             WeatherForecastController wfc1 = new WeatherForecastController(_logger);
             IEnumerable<WeatherForecast> lst = wfc1.Get();
             Assert.AreEqual(lst.Count() > 0, true);
         }
+
+        [Test]
+        public void TestWeatherForecastContainsScorching()
+        {
+            WeatherForecastController wfc1 = new WeatherForecastController(_logger);
+            IEnumerable<WeatherForecast> lst = wfc1.Get();
+            Assert.AreEqual(lst.Where(x => x.Summary == "Scorching").Count() > 0, true);
+        }
     }
+
 }
