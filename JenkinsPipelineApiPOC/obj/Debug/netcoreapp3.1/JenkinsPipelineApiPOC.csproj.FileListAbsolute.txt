@@ -27,7 +27,6 @@ D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\bin\
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\bin\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.runtimeconfig.dev.json
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\bin\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.dll
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\bin\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.pdb
-D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.csprojAssemblyReference.cache
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.AssemblyInfoInputs.cache
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.AssemblyInfo.cs
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.csproj.CoreCompileInputs.cache
@@ -38,3 +37,4 @@ D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.dll
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.pdb
 D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.genruntimeconfig.cache
+D:\Study\NAGP\2. Devops\GithubProjects\TestJenkinsApi\JenkinsPipelineApiPOC\obj\Debug\netcoreapp3.1\JenkinsPipelineApiPOC.csprojAssemblyReference.cache
