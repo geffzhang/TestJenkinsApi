@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi\\ProductManagementApi.csproj": {}
+    "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi\\ProductManagementApi.csproj": {
+    "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi\\ProductManagementApi.csproj",
+        "projectUniqueName": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj",
         "projectName": "ProductManagementApi",
-        "projectPath": "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi\\ProductManagementApi.csproj",
+        "projectPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi\\obj\\",
+        "outputPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",

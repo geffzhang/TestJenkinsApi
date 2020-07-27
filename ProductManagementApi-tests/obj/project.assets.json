@@ -4885,11 +4885,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
+      "projectUniqueName": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
       "projectName": "ProductManagementApi-tests",
-      "projectPath": "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
+      "projectPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi-tests\\obj\\",
+      "outputPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi-tests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4905,8 +4905,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi\\ProductManagementApi.csproj": {
-              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\ProductManagementApi\\ProductManagementApi\\ProductManagementApi.csproj"
+            "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj": {
+              "projectPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj"
             }
           }
         }

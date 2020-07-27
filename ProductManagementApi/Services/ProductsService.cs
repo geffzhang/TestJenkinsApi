@@ -18,6 +18,10 @@ namespace ProductManagementApi.Services
         }
         public List<Product> GetAllProducts()
         {
+            for (int i = 10; i < 10; i++)  // Noncompliant
+            {
+                // ...
+            }
             return _productItems;
         }
         public Product GetProductById(string id)
