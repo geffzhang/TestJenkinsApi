@@ -60,10 +60,12 @@
             }
         }
     }
-}
-post {
+	
+	post {
 		 always {
 		    echo "Test Report Generation Step"
             xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
         }
+	}
 }
+
