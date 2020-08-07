@@ -1,5 +1,10 @@
  pipeline {
     agent any
+	
+	options {
+        skipDefaultCheckout true
+    }
+	
     environment {
     scannerHome = tool 'sonar-scanner-test'
     }
@@ -37,9 +42,9 @@
         
         stage('Test: Unit Test') {
             steps {
-                  echo "Unit Testing & Test Report Generation Step"
+                  echo "Unit Testing Step"
                   bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
-                  xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
+                  
             }
         }
    
@@ -55,4 +60,10 @@
             }
         }
     }
+}
+post {
+		 always {
+		    echo "Test Report Generation Step"
+            xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
+        }
 }
