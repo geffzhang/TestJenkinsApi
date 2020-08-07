@@ -68,7 +68,7 @@
              steps {
 				  echo "Sonar Scanner: Start Code Analysis"
                   withSonarQubeEnv('Test_Sonar') {
-                  bat "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0"
+                  bat "dotnet ${scannerHome}/SonarScanner.MSBuild.exe begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0"
                   }
              }
         }
@@ -84,7 +84,7 @@
              steps {
 				   echo "SonarQube Analysis end"
                    withSonarQubeEnv('Test_Sonar') {
-                   bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll end"
+                   bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.exe end"
                    }
              }
         }
