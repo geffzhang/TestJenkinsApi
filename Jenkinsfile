@@ -15,7 +15,7 @@
 		
 		buildDiscarder(logRotator(
 			// number of build logs to keep
-            numToKeepStr:'5',
+            numToKeepStr:'3',
             // history to keep in days
             daysToKeepStr: '15',
             // artifacts are kept for days
