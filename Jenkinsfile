@@ -9,7 +9,7 @@
         //Append timestamp to the console output
 		timestamps()
 		
-		timeout(time: 1, unit: 'Hours')
+		timeout(time: 1, unit: 'HOURS') 
 		
 		skipDefaultCheckout()
 		
