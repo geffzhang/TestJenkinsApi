@@ -63,9 +63,10 @@
                   
             }
         }
-		echo "Sonar Scanner: Code Analysis Steps"
+		
         stage('Sonar Scanner: Start Code Analysis'){
              steps {
+				  echo "Sonar Scanner: Start Code Analysis"
                   withSonarQubeEnv('Test_Sonar') {
                   bat "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0"
                   }
@@ -74,12 +75,14 @@
 		
 		stage('Sonar Scanner: Build'){
              steps {
+				  echo "Sonar Scanner: Build"
                   bat 'dotnet msbuild "./ProductManagementApi.sln" /t:Rebuild /p:Configuration=Release'
              }
         }
 		
 		stage('SonarQube Analysis end'){
              steps {
+				   echo "SonarQube Analysis end"
                    withSonarQubeEnv('Test_Sonar') {
                    bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll end"
                    }
