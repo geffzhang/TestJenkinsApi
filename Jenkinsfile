@@ -63,17 +63,27 @@
                   
             }
         }
-   
-        stage('Sonar Scanner: Code Analysis'){
+		echo "Sonar Scanner: Code Analysis Steps"
+        stage('Sonar Scanner: Start Code Analysis'){
              steps {
-                  echo "Sonar Scanner: Code Analysis Step"
                   withSonarQubeEnv('Test_Sonar') {
-                  echo "${scannerHome}"
-                  bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi-SonarCodeAnalysis /n:ProductManagementApi-SonarCodeAnalysis /v:1.0"
-                  bat 'dotnet msbuild "./ProductManagementApi.sln" /t:Rebuild /p:Configuration=Release'
-                  bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
+                  bat "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0"
                   }
-            }
+             }
+        }
+		
+		stage('Sonar Scanner: Build'){
+             steps {
+                  bat 'dotnet msbuild "./ProductManagementApi.sln" /t:Rebuild /p:Configuration=Release'
+             }
+        }
+		
+		stage('SonarQube Analysis end'){
+             steps {
+                   withSonarQubeEnv('Test_Sonar') {
+                   bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll end"
+                   }
+             }
         }
     }
 	
