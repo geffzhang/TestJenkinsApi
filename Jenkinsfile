@@ -2,8 +2,7 @@
     agent any
 		
     environment {
-	Image = ''
-    scannerHome = tool name: 'sonar-scanner-test'
+	scannerHome = tool name: 'sonar-scanner-test'
 	registry = "rajivgogia/productmanagementapi"
     registryCredential = 'Docker'
     }
@@ -99,13 +98,12 @@
         }
 		
 		stage('Building image') {
-		 steps{
-			script {
-			  Image = docker.build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .
-			  }
-			}
+
+		  steps{
+			   bat 'docker.build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .'
 		  }
-				
+		}
+		
 		stage('Deploy Image') {
 		  steps{
 			script {
@@ -113,11 +111,6 @@
 				dockerImage.push()
 			  }
 			}
-		  }
-		}
-		stage('Remove Unused docker image') {
-		  steps{
-			sh "docker rmi $registry:$BUILD_NUMBER"
 		  }
 		}
 	}
