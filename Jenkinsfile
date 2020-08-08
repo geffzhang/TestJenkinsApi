@@ -89,9 +89,15 @@
              }
         }
 		
-		stage('Publish'){
+		stage('Release Artifacts'){
              steps{
-               bat "dotnet publish"
+               bat "dotnet publish -c Release -o "ProductManagementApi/app/build"'
+             }
+        }
+		
+		stage('Docker Image Creation'){
+             steps{
+               bat "docker build -t rajivgogia/productmanagementapi -f Dockerfile .'
              }
         }
     }
