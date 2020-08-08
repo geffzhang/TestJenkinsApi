@@ -37,21 +37,21 @@
         stage('Restore packages'){
             steps{
                   echo "Dotnet Restore Step"
-                  bat "dotnet restore ProductManagementApi-tests\\ProductManagementApi-tests.csproj"
+                  bat "dotnet restore"
             }
         }
         
         stage('Clean'){
             steps{
                   echo "Clean Step"
-                  bat "ProductManagementApi-tests\\ProductManagementApi-tests.csproj"
+                  bat "dotnet clean"
             }
         }
         
          stage('Build') {
             steps {
                   echo "Build Step"
-                  bat "dotnet build ProductManagementApi-tests\\ProductManagementApi-tests.csproj"
+                  bat "dotnet build"
             }
          
         }
