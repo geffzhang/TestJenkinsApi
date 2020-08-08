@@ -97,7 +97,10 @@
 		
 		stage('Docker Image Creation'){
              steps{
-               bat 'docker build -t rajivgogia/productmanagementapi -f Dockerfile .'
+			 
+					script {
+					  docker build -t rajivgogia/productmanagementapi + ":$BUILD_NUMBER" -f Dockerfile .
+					}
              }
         }
     }
