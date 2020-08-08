@@ -2,6 +2,7 @@
     agent any
 		
     environment {
+	Image = ''
     scannerHome = tool name: 'sonar-scanner-test'
 	registry = "rajivgogia/productmanagementapi"
     registryCredential = 'Docker'
