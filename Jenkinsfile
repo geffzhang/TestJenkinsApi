@@ -100,7 +100,7 @@
 	
 		stage('Building Image') {
 		 steps{
-			   sh "dockerImage = docker.build registry + ":${BUILD_NUMBER}"
+			   sh "dockerImage = docker.build rajivgogia/productmanagementapi:${BUILD_NUMBER}"
 		  }
 		  steps{
 			   bat "docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile ."
