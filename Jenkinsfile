@@ -88,6 +88,12 @@
                    }
              }
         }
+		
+		stage('Publish'){
+             steps{
+               bat "dotnet publish"
+             }
+        }
     }
 	
 	post {
