@@ -2,6 +2,7 @@
     agent any
 		
     environment {
+	dockerImage = ''
 	scannerHome = tool name: 'sonar-scanner-test'
 	registry = "rajivgogia/productmanagementapi"
     registryCredential = 'Docker'
@@ -97,10 +98,18 @@
              }
         }
 		
-		stage('Building image') {
-
+		stage('Building Image') {
 		  steps{
+			   dockerImage = docker.build registry + ":$BUILD_NUMBER"
 			   bat "docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile ."
+		  }
+		}
+		
+		stage('Deploy Image') {
+		  steps{
+			    docker.withRegistry( 'rajivgogia/productmanagementapi', registryCredential ) {
+				bat 'dockerImage.push()'
+			}
 		  }
 		}
 	}
