@@ -74,7 +74,7 @@
 		
 		stage('Deploy Image') {
 		  steps{
-					withDockerRegistry([credentialsId: 'Docker', url: "https://hub.docker.com/repository/docker/rajivgogia/productmanagementapi/"]) {
+					withDockerRegistry([credentialsId: 'Docker', url: ""]) {
 					sh '''
 					  docker push rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .
 					'''
