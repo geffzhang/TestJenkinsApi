@@ -109,8 +109,8 @@
 		
 		stage('Deploy Image') {
 		  steps{
-			    docker.withRegistry( 'rajivgogia/productmanagementapi', 'Docker' ) {
-				bat 'dockerImage.push()'
+			    withDockerRegistry([ credentialsId: "Docker", url: "" ]) {
+				bat "docker push rajivgogia/productmanagementapi:${BUILD_NUMBER}"
 			}
 		  }
 		}
