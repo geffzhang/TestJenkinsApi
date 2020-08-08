@@ -99,11 +99,13 @@
         }
 		
 		stage('Building image') {
-		  steps{
-			   bat 'Image = docker.build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .'
+		 steps{
+			script {
+			  Image = docker.build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .
+			  }
+			}
 		  }
-		}
-		
+				
 		stage('Deploy Image') {
 		  steps{
 			script {
