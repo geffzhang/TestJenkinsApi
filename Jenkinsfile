@@ -97,10 +97,12 @@
                bat 'dotnet publish -c Release -o "ProductManagementApi/app/build"'
              }
         }
-		
+	
 		stage('Building Image') {
-		  steps{
+		 steps{
 			   dockerImage = docker.build registry + ":$BUILD_NUMBER"
+		  }
+		  steps{
 			   bat "docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile ."
 		  }
 		}
