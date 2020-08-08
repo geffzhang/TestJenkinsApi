@@ -59,7 +59,40 @@
          
         }
         
-         stage('Release Artifacts'){
+        stage('Test: Unit Test') {
+            steps {
+                  echo "Unit Testing Step"
+                  bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
+                  
+            }
+        }
+		
+        stage('Sonar Scanner: Start Code Analysis'){
+             steps {
+				  echo "Sonar Scanner: Start Code Analysis"
+                  withSonarQubeEnv('Test_Sonar') {
+                  bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0"
+                  }
+             }
+        }
+		
+		stage('Sonar Scanner: Build'){
+             steps {
+				  echo "Sonar Scanner: Build"
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
+             }
+        }
+		
+		stage('SonarQube Analysis end'){
+             steps {
+				   echo "SonarQube Analysis end"
+                   withSonarQubeEnv('Test_Sonar') {
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
+                   }
+             }
+        }
+		
+		stage('Release Artifacts'){
              steps{
                bat 'dotnet publish -c Release -o "ProductManagementApi/app/build"'
              }
@@ -75,10 +108,17 @@
 		stage('Deploy Image') {
 		  steps{
 					withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-					bat "docker push rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile ."
+					bat "docker push rajivgogia/productmanagementapi:${BUILD_NUMBER}"
 				}
 			}
 		  }
 		}
+	
+	post {
+		 always {
+		    echo "Test Report Generation Step"
+            xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
+        }
+	}
 }
 
