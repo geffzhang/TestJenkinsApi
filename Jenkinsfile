@@ -76,7 +76,7 @@
 		stage('Sonar Scanner: Build'){
              steps {
 				  echo "Sonar Scanner: Build"
-                  bat 'dotnet msbuild "./ProductManagementApi.sln" /t:Rebuild /p:Configuration=Release'
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"
              }
         }
 		
