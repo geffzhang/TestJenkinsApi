@@ -103,14 +103,6 @@
 			   bat 'docker.build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .'
 		  }
 		}
-		
-		stage('Deploy Image') {
-		  steps{
-			  docker.withRegistry( 'rajivgogia/productmanagementapi', registryCredential ) {
-				bat 'dockerImage.push()'
-			}
-		  }
-		}
 	}
 	
 	post {
