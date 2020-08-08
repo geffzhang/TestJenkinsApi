@@ -105,7 +105,7 @@
 		  }
 		}
 		
-		stage('Deploy Image') {
+		stage('Move Image to Docker Private Registry') {
 		  steps{
 					withDockerRegistry([credentialsId: 'Docker', url: ""]) {
 					bat "docker push rajivgogia/productmanagementapi:${BUILD_NUMBER}"
