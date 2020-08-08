@@ -100,7 +100,7 @@
 		stage('Building image') {
 
 		  steps{
-			   bat 'docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .'
+			   bat "docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile ."
 		  }
 		}
 	}
