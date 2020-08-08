@@ -100,14 +100,20 @@
 	
 		stage('Building Image') {
 		  steps{
-			   bat "docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile ."
+			   script {
+				dockerImage = docker.build registry + ":$BUILD_NUMBER" .
+			   }
 		  }
 		}
 		
 		stage('Deploy Image') {
 		  steps{
-			    withDockerRegistry([ credentialsId: "Docker", url: "" ]) {
-				bat "docker push rajivgogia/productmanagementapi:${BUILD_NUMBER}"
+		  
+				script {
+					docker.withRegistry('', 'Docker') {
+					dockerImage.push()
+					}
+				}
 			}
 		  }
 		}
