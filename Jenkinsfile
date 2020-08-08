@@ -3,6 +3,8 @@
 		
     environment {
     scannerHome = tool name: 'sonar-scanner-test'
+	registry = "rajivgogia/productmanagementapi"
+    registryCredential = 'Docker'
     }
 	
 	options {
@@ -97,7 +99,9 @@
 		
 		stage('Docker Image Creation'){
              steps{
-               bat 'docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .'
+			   script {
+				  docker.build registry + ":$BUILD_NUMBER" -f Dockerfile .
+			   }
              }
         }
     }
