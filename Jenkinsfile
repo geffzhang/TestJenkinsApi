@@ -97,12 +97,27 @@
              }
         }
 		
-		stage('Docker Image Creation'){
-             steps{
-               bat 'docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} .'
-             }
-        }
-    }
+		stage('Building image') {
+		  steps{
+			   bat 'dockerImage = docker.build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile .'
+		  }
+		}
+		
+		stage('Deploy Image') {
+		  steps{
+			script {
+			  docker.withRegistry( '', registryCredential ) {
+				dockerImage.push()
+			  }
+			}
+		  }
+		}
+		stage('Remove Unused docker image') {
+		  steps{
+			sh "docker rmi $registry:$BUILD_NUMBER"
+		  }
+		}
+	}
 	
 	post {
 		 always {
