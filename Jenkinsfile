@@ -107,7 +107,7 @@
 		stage('Deploy Image') {
 		  steps{
 			script {
-			  docker.withRegistry( '', registryCredential ) {
+			  docker.withRegistry( 'rajivgogia/productmanagementapi', registryCredential ) {
 				dockerImage.push()
 			  }
 			}
