@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY ProductManagementApi/ProductManagementApi.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
