@@ -33,12 +33,15 @@
              steps {
                 script {
                     env.ContainerId = bat "docker inspect --format='{{.Id}}' ProductManagementApi"
-					if (env.ContainerId)
-					then
-						echo "${env.ContainerId}"
-					fi
                 }
                 //echo "${env.ContainerId}"
+				bat """
+						if [ $ContainerId ]
+						then 
+							docker stop ${ContainerId}
+							docker rm -f ${ContainerId}
+						fi
+					"""
             }
         }
 	}
