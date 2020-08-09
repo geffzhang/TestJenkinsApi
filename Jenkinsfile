@@ -61,7 +61,6 @@
             steps {
                   echo "Unit Testing Step"
                   bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
-                  
             }
         }
 		
@@ -98,7 +97,6 @@
 		
 		stage('Building Image') {
 		  steps{
-				
 			   bat "docker build -t ${registry}:${BUILD_NUMBER} -f Dockerfile ."
 		  }
 		}
@@ -110,7 +108,6 @@
                 }
             }
           }
-		
 		}
 	
 	post {
