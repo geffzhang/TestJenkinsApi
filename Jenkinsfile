@@ -117,7 +117,6 @@
 		
 		stage('Docker -- Stop Running Container') {
           steps{
-					...
 					bat """
 						ContainerId= docker inspect --format="{{.Id}}" ProductManagementApi
 						echo "${ContainerId}"
@@ -127,7 +126,6 @@
 							docker rm -f ${ContainerId}
 						fi
 					"""
-				    ...
             }
           }  
 		}
