@@ -92,24 +92,9 @@
 		
 		stage('Release Artifacts'){
              steps{
-               bat 'dotnet publish -c Release -o "ProductManagementApi/app/build"'
+               bat 'dotnet publish -c Release'
              }
         }
-	
-		stage('Building Image') {
-		  steps{
-				
-			   bat "docker build -t ${registry}:${BUILD_NUMBER} -f Dockerfile ."
-		  }
-		}
-		
-		stage('Move Image to Docker Private Registry') {
-		  steps{
-					withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-					bat "docker push ${registry}:${BUILD_NUMBER}"
-				}
-			}
-		  }
 		}
 	
 	post {
