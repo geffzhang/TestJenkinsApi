@@ -41,7 +41,7 @@
 						//echo env.ContainerId
 						//bat "docker stop ${ContainerId}"
 						//bat "docker rm -f ${ContainerId}"
-					}
+					//}
             }
         }
 	}
