@@ -30,15 +30,15 @@
         
         stage('Checkout') {
             steps {
-                 try {
-					bat "docker stop (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})"
-					bat "docker rm -f (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})"
-				}
-				catch(err) {
-					echo "test"
-				}
+			
+				try {
+                       bat "docker stop (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})"
+					  bat "docker rm -f (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})"
+                    } catch(error) {
+                        result = "FAIL"
              }
         }
+	}
 	}
 }
 
