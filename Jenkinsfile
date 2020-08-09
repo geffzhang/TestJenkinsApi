@@ -32,9 +32,9 @@
         stage('Checkout') {
              steps {
                 script {
-                    env.FILENAME = 'output.txt'
+                    env.ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
                 }
-                echo "${env.FILENAME}"
+                echo "${env.ContainerId}"
             }
         }
 	}
