@@ -12,8 +12,8 @@
         stage('Checkout') {
             steps {
                   bat """
-						$ContainerId = "Hello"
-						echo $ContainerId
+						$env.ContainerId = "Hello"
+						echo $env.ContainerId
 					"""
              }
         }
