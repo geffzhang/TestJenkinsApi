@@ -32,7 +32,7 @@
         stage('Checkout') {
              steps {
 				bat """
-						if(docker ps -f name=ProductManagementApi | Select-String 5000){
+						if(docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]}){
 							docker stop ProductManagementApi
 							docker rm -f ProductManagementApi
 						}
