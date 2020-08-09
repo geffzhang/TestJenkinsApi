@@ -31,8 +31,8 @@
         stage('Checkout') {
             steps {
                  try {
-					docker stop (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})
-					docker rm -f (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})
+					bat "docker stop (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})"
+					bat "docker rm -f (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})"
 				}
 				catch {
 					# What to do with terminating errors
