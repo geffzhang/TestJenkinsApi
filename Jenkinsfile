@@ -32,7 +32,7 @@
         stage('Checkout') {
              steps {
                 script {
-					bat "env.ContainerId = docker inspect --format='{{.Id}}' ProductManagementApi"
+                    env.ContainerId = "$(docker inspect --format='{{.Id}}' ProductManagementApi)"
                 }
                 echo "${env.ContainerId}"
             }
