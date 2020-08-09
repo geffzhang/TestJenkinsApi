@@ -35,14 +35,14 @@
                     env.ContainerId = bat "docker inspect --format='{{.Id}}' ProductManagementApi"
                 }
                 //echo "${env.ContainerId}"
-				bat """
+				bat "
 						echo ${env.ContainerId}
 						if [ ${env.ContainerId} ]
 						then 
 							docker stop ${env.ContainerId}
 							docker rm -f ${env.ContainerId}
 						fi
-					"""
+					"
             }
         }
 	}
