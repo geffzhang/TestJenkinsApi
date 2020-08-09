@@ -31,10 +31,9 @@
         
         stage('Checkout') {
              steps {
-                script {
-                    env.ContainerId = bat ("docker inspect --format='{{.Id}}' ProductManagementApi", returnStdout: true)
-                }
-                echo "${env.ContainerId}"
+				def script = "docker inspect --format='{{.Id}}' ProductManagementApi"
+				def status = bat(script: script, returnStdout: true)
+				echo "$status" 
             }
         }
 	}
