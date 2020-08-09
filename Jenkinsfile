@@ -31,9 +31,10 @@
         
         stage('Checkout') {
              steps {
-				def script = "docker inspect --format='{{.Id}}' ProductManagementApi"
-				def status = sh (script: script, returnStdout: true)
-				echo "$status" 
+				sh ...
+				ContainerId = $(docker ps | grep 5000 | cut -d " " -f 1)
+				echo $ContainerId
+				...
             }
         }
 	}
