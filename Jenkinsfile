@@ -31,12 +31,12 @@
         
         stage('Checkout') {
              steps {
-				script{
-						if(bat "docker ps -f name=ProductManagementApi |select-string 5000 | %{ (\$_ -split ' ')[0]}"){
-							bat "docker stop ProductManagementApi"
-							bat "docker rm -f ProductManagementApi"
+				bat """
+						if(docker ps -f name=ProductManagementApi |select-string 5000 | %{ (\$_ -split ' ')[0]}){
+							docker stop ProductManagementApi
+							docker rm -f ProductManagementApi
 						}
-				}
+				"""
             }
         }
 	}
