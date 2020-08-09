@@ -33,7 +33,6 @@
              steps {
                 script {
                     env.ContainerId = bat "docker inspect --format='{{.Id}}' ProductManagementApi"
-					if(
                 }
                 //echo "${env.ContainerId}"
 				
