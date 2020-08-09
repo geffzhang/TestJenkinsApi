@@ -4,7 +4,6 @@
     environment {
 	scannerHome = tool name: 'sonar-scanner-test'
 	registry = 'rajivgogia/productmanagementapi'
-	ContainerId = '';
    }
 	
 	options {
@@ -30,17 +29,15 @@
     stages {
         
         stage('Checkout') {
-             steps {
-					bat """
-						env.ContainerId = "docker ps -f name=ProductManagementApi |select-string 5000 | %%{ (\$_ -split " ")[0]}"
-						echo %env.ContainerId%
-						if [ $ContainerId ]
-						then 
-							docker stop ${ContainerId}
-							docker rm -f ${ContainerId}
-						fi
-					"""
-            }
+            steps {
+                 try {
+					docker stop (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})
+					docker rm -f (docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]})
+				}
+				catch {
+					# What to do with terminating errors
+				}
+             }
         }
 	}
 }
