@@ -33,10 +33,10 @@
              steps {
                 script {
                     env.ContainerId = bat "docker inspect --format='{{.Id}}' ProductManagementApi"
-					if(${env.ContainerId})
+					if(env.ContainerId)
 					then
-						bat "docker stop ${env.ContainerId}"
-						bat "docker rm -f ${env.ContainerId}"
+						bat "docker stop env.ContainerId"
+						bat "docker rm -f env.ContainerId"
 					fi
                 }
             }
