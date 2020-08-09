@@ -97,14 +97,20 @@
 		
 		stage('Building Image') {
 		  steps{
-			   bat "docker build -t ${registry}:${BUILD_NUMBER} -f Dockerfile ."
+			   bat "docker build -t ${registry}:${BUILD_NUMBER}"
+		  }
+		}
+		
+		stage('Change latest build tag Image') {
+		  steps{
+			   bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
 		  }
 		}
 		
 		stage('Move Image to Docker Private Registry') {
           steps{
                     withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
+                    bat "docker push ${registry}:latest"
                 }
             }
           }
