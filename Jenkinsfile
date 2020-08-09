@@ -32,7 +32,7 @@
         stage('Checkout') {
              steps {
 					bat """
-						ContainerId = ${docker inspect --format="{{.Id}}" ProductManagementApi}
+						ContainerId = "bat ${docker ps -f name=ProductManagementApi |select-string 5000 | %%{ ($_ -split " ")[0]}}"
 						echo $ContainerId
 						if [ $ContainerId ]
 						then 
