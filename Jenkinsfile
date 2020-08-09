@@ -36,7 +36,7 @@
                 }
                 //echo "${env.ContainerId}"
 				bat """
-						if [ $env.ContainerId ]
+						if [ ${env.ContainerId} ]
 						then 
 							docker stop ${env.ContainerId}
 							docker rm -f ${env.ContainerId}
