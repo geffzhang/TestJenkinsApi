@@ -32,7 +32,7 @@
         stage('Checkout') {
              steps {
 				def script = "docker inspect --format='{{.Id}}' ProductManagementApi"
-				def status = bat(script: script, returnStdout: true)
+				def status = sh (script: script, returnStdout: true)
 				echo "$status" 
             }
         }
