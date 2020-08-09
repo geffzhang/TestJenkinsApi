@@ -2,11 +2,9 @@
     agent any
 		
     environment {
-	dockerImage = ''
 	scannerHome = tool name: 'sonar-scanner-test'
-	registry = "rajivgogia/productmanagementapi"
-    registryCredential = 'Docker'
-    }
+	registry = 'rajivgogia/productmanagementapi"
+   }
 	
 	options {
         //Append timestamp to the console output
@@ -101,14 +99,14 @@
 		stage('Building Image') {
 		  steps{
 				
-			   bat "docker build -t rajivgogia/productmanagementapi:${BUILD_NUMBER} -f Dockerfile ."
+			   bat "docker build -t ${registry}:${BUILD_NUMBER} -f Dockerfile ."
 		  }
 		}
 		
 		stage('Move Image to Docker Private Registry') {
 		  steps{
 					withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-					bat "docker push rajivgogia/productmanagementapi:${BUILD_NUMBER}"
+					bat "docker push ${registry}:${BUILD_NUMBER}"
 				}
 			}
 		  }
