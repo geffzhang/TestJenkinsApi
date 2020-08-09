@@ -108,23 +108,23 @@
 		  //}
 		//}
 		
-		stage('Move Image to Docker Private Registry') {
-          steps{
-                    withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
-                }
-            }
-          }
+		//stage('Move Image to Docker Private Registry') {
+          //steps{
+          //          withDockerRegistry([credentialsId: 'Docker', url: ""]) {
+            //        bat "docker push ${registry}:${BUILD_NUMBER}"
+            //    }
+          //  }
+       //   }
 		
 		stage('Docker -- Stop Running Container') {
           steps{
 					bat """
-						ContainerId= docker inspect --format="{{.Id}}" ProductManagementApi
-						echo "${ContainerId}"
-						if [ ${ContainerId} ]
+						//ContainerId= docker inspect --format="{{.Id}}" ProductManagementApi
+						echo docker inspect --format="{{.Id}}" ProductManagementApi
+						if [ docker inspect --format="{{.Id}}" ProductManagementApi ]
 						then 
-							docker stop ${ContainerId}
-							docker rm -f ${ContainerId}
+							docker stop docker inspect --format="{{.Id}}" ProductManagementApi
+							docker rm -f docker inspect --format="{{.Id}}" ProductManagementApi
 						fi
 					"""
             }
