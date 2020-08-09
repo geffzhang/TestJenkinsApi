@@ -32,9 +32,17 @@
         stage('Checkout') {
              steps {
                 script {
-                    env.ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
+                    bat """
+						env.ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
+						echo env.ContainerId
+						//if [ $ContainerId ]
+						//then 
+							//docker stop ${ContainerId}
+							//docker rm -f ${ContainerId}
+						//fi
+				//	"""
                 }
-                echo "${env.ContainerId}"
+                //echo "${env.ContainerId}"
             }
         }
 	}
