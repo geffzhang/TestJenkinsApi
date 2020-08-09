@@ -32,13 +32,10 @@
         stage('Checkout') {
              steps {
 				bat """
-						def env.ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
-						echo %env.ContainerId*
-						//if [ $ContainerId ]
-						//then 
-							//docker stop ${ContainerId}
-							//docker rm -f ${ContainerId}
-						//fi
+						if(docker ps -f name=ProductManagementApi | Select-String 5000){
+							docker stop ProductManagementApi
+							docker rm -f ProductManagementApi
+						}
 				//	"""
             }
         }
