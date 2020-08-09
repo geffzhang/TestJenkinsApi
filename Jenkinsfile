@@ -35,8 +35,8 @@
                     env.ContainerId = bat "docker inspect --format='{{.Id}}' ProductManagementApi"
 					if(env.ContainerId)
 					then
-						bat "docker stop ${env.ContainerId}"
-						bat "docker rm -f ${env.ContainerId}"
+						bat "docker stop ${ContainerId}"
+						bat "docker rm -f ${ContainerId}"
 					fi
                 }
             }
