@@ -97,7 +97,7 @@
 		
 		stage('Building Image') {
 		  steps{
-			   bat "docker build -t ${registry}:${BUILD_NUMBER}"
+			bat "docker build -t ${registry}:${BUILD_NUMBER} -f Dockerfile ."
 		  }
 		}
 		
