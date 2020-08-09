@@ -128,7 +128,6 @@
 					"""
             }
           }  
-		}
 		  
 		stage('Docker Deployment') {
           steps{
