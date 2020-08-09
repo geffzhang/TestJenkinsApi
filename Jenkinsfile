@@ -32,8 +32,8 @@
         stage('Checkout') {
              steps {
 					bat """
-						ContainerId = "docker ps -f name=ProductManagementApi |select-string 5000 | %%{ (\$_ -split " ")[0]}"
-						echo ${ContainerId}
+						env.ContainerId = "docker ps -f name=ProductManagementApi |select-string 5000 | %%{ (\$_ -split " ")[0]}"
+						echo %env.ContainerId%
 						if [ $ContainerId ]
 						then 
 							docker stop ${ContainerId}
