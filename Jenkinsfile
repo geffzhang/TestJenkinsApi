@@ -32,7 +32,7 @@
             steps {
                  bat """
 					    ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
-						echo ${ContainerId}
+						//echo ${ContainerId}
 						//if [ $ContainerId ]
 						//then 
 							//docker stop ${ContainerId}
