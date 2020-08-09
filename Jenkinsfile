@@ -4,6 +4,7 @@
     environment {
 	scannerHome = tool name: 'sonar-scanner-test'
 	registry = 'rajivgogia/productmanagementapi'
+	ContainerId = '';
    }
 	
 	options {
