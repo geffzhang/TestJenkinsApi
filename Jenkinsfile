@@ -31,8 +31,8 @@
         stage('Checkout') {
             steps {
                  bat """
-					    def ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
-						echo ContainerId
+					    ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
+						echo ${ContainerId}
 						//if [ $ContainerId ]
 						//then 
 							//docker stop ${ContainerId}
