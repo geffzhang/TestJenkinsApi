@@ -65,30 +65,30 @@
             }
         }
 		
-        stage('Sonar Scanner: Start Code Analysis'){
-             steps {
-				  echo "Sonar Scanner: Start Code Analysis"
-                  withSonarQubeEnv('Test_Sonar') {
-                  bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0"
-                  }
-             }
-        }
+       // stage('Sonar Scanner: Start Code Analysis'){
+           //  steps {
+				//  echo "Sonar Scanner: Start Code Analysis"
+                //  withSonarQubeEnv('Test_Sonar') {
+                  //bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0"
+                 // }
+            // }
+        //}
 		
-		stage('Sonar Scanner: Build'){
-             steps {
-				  echo "Sonar Scanner: Build"
-                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
-             }
-        }
+		//stage('Sonar Scanner: Build'){
+        //     steps {
+			//	  echo "Sonar Scanner: Build"
+             //     bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
+            // }
+       // }
 		
-		stage('SonarQube Analysis end'){
-             steps {
-				   echo "SonarQube Analysis end"
-                   withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
-                   }
-             }
-        }
+		//stage('SonarQube Analysis end'){
+            // steps {
+			//	   echo "SonarQube Analysis end"
+             //      withSonarQubeEnv('Test_Sonar') {
+               //    bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
+               //    }
+            // }
+       // }
 		
 		stage('Release Artifacts'){
              steps{
@@ -119,7 +119,6 @@
 		stage('Docker -- Stop Running Container') {
           steps{
 					bat """
-						//ContainerId= docker inspect --format="{{.Id}}" ProductManagementApi
 						echo docker inspect --format="{{.Id}}" ProductManagementApi
 						if [ docker inspect --format="{{.Id}}" ProductManagementApi ]
 						then 
