@@ -30,17 +30,12 @@
     stages {
         
         stage('Checkout') {
-            steps {
-                 bat """
-					    ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
-						//echo ${ContainerId}
-						//if [ $ContainerId ]
-						//then 
-							//docker stop ${ContainerId}
-							//docker rm -f ${ContainerId}
-						//fi
-				//	"""
-             }
+             steps {
+                script {
+                    env.FILENAME = readFile 'output.txt'
+                }
+                echo "${env.FILENAME}"
+            }
         }
 	}
 }
