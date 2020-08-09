@@ -31,10 +31,15 @@
         
         stage('Checkout') {
              steps {
-				sh ...
-				ContainerId = $(docker ps | grep 5000 | cut -d " " -f 1)
-				echo $ContainerId
-				...
+				bat """
+						def env.ContainerId = docker inspect --format="{{.Id}}" ProductManagementApi
+						echo %env.ContainerId*
+						//if [ $ContainerId ]
+						//then 
+							//docker stop ${ContainerId}
+							//docker rm -f ${ContainerId}
+						//fi
+				//	"""
             }
         }
 	}
