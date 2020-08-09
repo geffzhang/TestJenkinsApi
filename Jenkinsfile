@@ -3,7 +3,7 @@
 		
     environment {
 	scannerHome = tool name: 'sonar-scanner-test'
-	registry = 'rajivgogia/productmanagementapi"
+	registry = 'rajivgogia/productmanagementapi'
    }
 	
 	options {
