@@ -117,7 +117,7 @@
 		
 		stage('Docker -- Stop Running Container') {
           steps{
-					bat "docker rm -f container_name || true"
+					bat "docker rm -f ProductManagementApi || true"
           }
         }  
 		  
