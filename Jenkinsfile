@@ -97,23 +97,29 @@
 		
 		stage('Building Image') {
 		  steps{
-			bat "docker build -t ${registry}:${BUILD_NUMBER} -f Dockerfile ."
+			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
 		  }
 		}
 		
-		stage('Change latest build tag Image') {
-		  steps{
-			   bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
-		  }
-		}
+		//stage('Change latest build tag Image') {
+		 // steps{
+			 //  bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
+		  //}
+		//}
 		
 		stage('Move Image to Docker Private Registry') {
           steps{
                     withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-                    bat "docker push ${registry}:latest"
+                    bat "docker push ${registry}:${BUILD_NUMBER}"
                 }
             }
           }
+		  
+		stage('Docker Deployment') {
+          steps{
+                    bat "docker run -name ProductManagementApi -d -p 5000:80 ${registry}:${BUILD_NUMBER}"
+            }
+          }  
 		}
 	
 	post {
