@@ -114,6 +114,23 @@
                 }
             }
           }
+		
+		stage('Docker -- Stop Running Container') {
+          steps{
+					...
+					bat """
+						ContainerId= docker inspect --format="{{.Id}}" ProductManagementApi
+						echo "${ContainerId}"
+						if [ ${ContainerId} ]
+						then 
+							docker stop ${ContainerId}
+							docker rm -f ${ContainerId}
+						fi
+					"""
+				    ...
+            }
+          }  
+		}
 		  
 		stage('Docker Deployment') {
           steps{
