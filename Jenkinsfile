@@ -32,7 +32,7 @@
         stage('Checkout') {
              steps {
 					bat """
-						ContainerId = $(docker inspect --format="{{.Id}}" ProductManagementApi)
+						ContainerId = ${docker inspect --format="{{.Id}}" ProductManagementApi}
 						echo $ContainerId
 						if [ $ContainerId ]
 						then 
