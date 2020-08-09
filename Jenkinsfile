@@ -31,12 +31,15 @@
         
         stage('Checkout') {
              steps {
-				bat """\
-						if(docker ps -f name=ProductManagementApi |select-string 5000 | %{ (\$_ -split ' ')[0]}){\
-							docker stop ProductManagementApi \
-							docker rm -f ProductManagementApi \
-						}\
-				"""
+					bat """
+						ContainerId = $(docker inspect --format="{{.Id}}" ProductManagementApi)
+						echo $ContainerId
+						if [ $ContainerId ]
+						then 
+							docker stop ${ContainerId}
+							docker rm -f ${ContainerId}
+						fi
+					"""
             }
         }
 	}
