@@ -33,7 +33,7 @@
              steps {
 					bat """
 						ContainerId = "docker ps -f name=ProductManagementApi |select-string 5000 | %%{ (\$_ -split " ")[0]}"
-						echo $ContainerId
+						echo ${ContainerId}
 						if [ $ContainerId ]
 						then 
 							docker stop ${ContainerId}
