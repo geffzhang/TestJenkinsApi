@@ -117,7 +117,7 @@
 		  
 		stage('Docker Deployment') {
           steps{
-                    bat "docker run -name ProductManagementApi -d -p 5000:80 ${registry}:${BUILD_NUMBER}"
+                    bat "docker run --name ProductManagementApi -d -p 5000:80 ${registry}:${BUILD_NUMBER}"
             }
           }  
 		}
