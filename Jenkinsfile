@@ -31,7 +31,7 @@
        
 		stage('Docker -- Stop Running Container') {
           steps{
-					echo bat(returnStdout: true, script: 'docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]')
+					echo bat(returnStdout: true, script: 'docker ps -f name=ProductManagementApi \|select-string 5000 \| %{ ($_ -split " ")[0]')
             }
           }  
 		  
