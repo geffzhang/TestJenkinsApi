@@ -4,6 +4,7 @@
     environment {
 	scannerHome = tool name: 'sonar-scanner-test'
 	registry = 'rajivgogia/productmanagementapi'
+	message = '';
    }
 	
 	options {
@@ -33,8 +34,8 @@
           steps{
 					bat(
 					"""
-					$message = docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]}
-					echo $message
+					${env.message} = docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]}
+					echo ${env.message}
 					"""
 					)
             }
