@@ -4,7 +4,7 @@
     environment {
 	scannerHome = tool name: 'sonar-scanner-test'
 	registry = 'rajivgogia/productmanagementapi'
-	message = '';
+	message
    }
 	
 	options {
@@ -32,13 +32,9 @@
        
 		stage('Docker -- Stop Running Container') {
           steps{
-					bat(
-					"""
-					${env.message} = docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split " ")[0]}
-					echo ${env.message}
-					"""
-					)
+					bat "${message} = docker ps -f name=ProductManagementApi |select-string 5000 | %{ ($_ -split ' ')[0]}"
             }
+			echo ${message}
           }  
 		  
 		stage('Docker Deployment') {
