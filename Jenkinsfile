@@ -91,12 +91,14 @@
 		
 		stage('Release Artifacts'){
              steps{
+			   echo "Release Artifacts"
                bat 'dotnet publish -c Release'
              }
         }
 		
 		stage('Building Image') {
 		  steps{
+			echo "Building Image"
 			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
 		  }
 		}
@@ -109,6 +111,7 @@
 		
 		stage('Move Image to Docker Private Registry') {
           steps{
+					echo "Move Image to Docker Private Registry"
                     withDockerRegistry([credentialsId: 'Docker', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
                 }
@@ -117,18 +120,20 @@
 		
         stage('Docker -- Stop & Removing Running Container') {
           steps{
-			script {
-                def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
-                if(containerId!= null && containerId!="") {
-                    bat "docker stop ProductManagementApi"
-					bat "docker rm -f ProductManagementApi"
-                }
-            }
-          }
+					echo "Docker -- Stop & Removing Running Container"
+					script {
+						def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
+						if(containerId!= null && containerId!="") {
+						bat "docker stop ProductManagementApi"
+						bat "docker rm -f ProductManagementApi"
+						}	
+					}
+		  }
 		}		  
 	  
 		stage('Docker Deployment') {
           steps{
+					echo "Docker Deployment"
                     bat "docker run --name ProductManagementApi -d -p 5000:80 ${registry}:${BUILD_NUMBER}"
             }
         } 
