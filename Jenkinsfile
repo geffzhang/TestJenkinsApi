@@ -122,15 +122,12 @@ pipeline {
           steps{
 					echo "Docker -- Stop & Removing Running Container"
 					script {
-						// This don't bring result if container exists and in stopped state
-						//def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
-						
-						def containerId = powershell(returnStdout: true, script: "docker ps -a | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
+						def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
 						if(containerId!= null && containerId!="") {
 						//bat "docker stop ProductManagementApi"
 						//bat "docker rm -f ProductManagementApi"
-						bat "docker stop containerId"
-						bat "docker rm -f containerId"
+						bat "docker stop ${containerId}"
+						bat "docker rm -f ${containerId}"
 						}	
 					}
 		  }
