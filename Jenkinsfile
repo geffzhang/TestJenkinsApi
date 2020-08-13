@@ -127,8 +127,10 @@ pipeline {
 						
 						def containerId = powershell(returnStdout: true, script: "docker ps -a | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
 						if(containerId!= null && containerId!="") {
-						bat "docker stop ProductManagementApi"
-						bat "docker rm -f ProductManagementApi"
+						//bat "docker stop ProductManagementApi"
+						//bat "docker rm -f ProductManagementApi"
+						bat "docker stop containerId"
+						bat "docker rm -f containerId"
 						}	
 					}
 		  }
