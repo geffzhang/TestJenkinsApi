@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "IjQpjnu17wcQ2/UxBDF1zf1ZVzR26GY/AZYpuQVAwqB2pzTSUEnURX1eWsXdxOlys8LuBEFZSIFdl9CQYGgXnQ==",
+  "success": true,
+  "projectFilePath": "D:\\Documents\\Nagp\\Devops\\Projects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rajivgogia\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.10.9\\microsoft.visualstudio.azure.containers.tools.targets.1.10.9.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -2131,12 +2131,11 @@
       ]
     },
     "System.Collections.NonGeneric/4.3.0": {
-      "sha512": "prtjIEMhGUnQq6RnPEYLpFt8AtLbp9yq2zxOSrY7KJJZrw25Fi97IzBqY7iqssbM61Ek5b8f3MG/sG1N2sN5KA==",
+      "sha512": "LE/oChpRvkSi3U25u0KnJcI44JeDZ1QJCyN4qFDx2uusEypdqR24w7lKYw21eYe5esuCBuc862wRmpF63Yy1KQ==",
       "type": "package",
       "path": "system.collections.nongeneric/4.3.0",
       "files": [
         ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -4720,19 +4719,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
+    "C:\\Users\\rajivgogia\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
+      "projectUniqueName": "D:\\Documents\\Nagp\\Devops\\Projects\\TestJenkinsApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
       "projectName": "ProductManagementApi-tests",
-      "projectPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
-      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi-tests\\obj\\",
+      "projectPath": "D:\\Documents\\Nagp\\Devops\\Projects\\TestJenkinsApi\\ProductManagementApi-tests\\ProductManagementApi-tests.csproj",
+      "packagesPath": "C:\\Users\\rajivgogia\\.nuget\\packages\\",
+      "outputPath": "D:\\Documents\\Nagp\\Devops\\Projects\\TestJenkinsApi\\ProductManagementApi-tests\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\rajivgogia\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4740,13 +4743,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "http://10.50.5.120:8081/nuget": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://mgmt-dop1-nxs01.obexchange.com/repository/nuget-group/": {}
       },
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj": {
-              "projectPath": "D:\\Study\\NAGP\\2. Devops\\GithubProjects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj"
+            "D:\\Documents\\Nagp\\Devops\\Projects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj": {
+              "projectPath": "D:\\Documents\\Nagp\\Devops\\Projects\\TestJenkinsApi\\ProductManagementApi\\ProductManagementApi.csproj"
             }
           }
         }
@@ -4783,12 +4788,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.2, 3.1.2]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -4797,7 +4796,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
       }
     }
   }
