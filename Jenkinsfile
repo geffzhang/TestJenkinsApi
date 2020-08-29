@@ -2,7 +2,7 @@ pipeline {
     agent any
 		
     environment {
-	scannerHome = tool name: 'sonar-scanner-test'
+	scannerHome = tool name: 'sonar_scanner_dotnet'
 	registry = 'rajivgogia/productmanagementapi'
    }
 	
