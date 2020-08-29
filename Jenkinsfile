@@ -68,7 +68,7 @@ pipeline {
              steps {
 				  echo "Sonar Scanner: Start Code Analysis"
                   withSonarQubeEnv('Test_Sonar') {
-                  bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0 /d:sonar.login=9e28b8fd523c2138d16ab58331ec6fddf0fdc19c"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0 /d:sonar.login=c865e8826866d1160f011fac6dd18890c93a0b8e"
                   }
              }
         }
@@ -84,7 +84,7 @@ pipeline {
              steps {
 				   echo "SonarQube Analysis end"
                    withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end /d:sonar.login=9e28b8fd523c2138d16ab58331ec6fddf0fdc19c"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end /d:sonar.login=bd8d0738e675f757a474b3f7445c3320afe73e4f"
                    }
              }
         }
