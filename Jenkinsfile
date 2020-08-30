@@ -31,6 +31,7 @@ pipeline {
         stage('Checkout') {
             steps {
                   echo "Git Checkout Step"
+				  echo env.BRANCH_NAME
                   checkout scm
              }
         }
@@ -68,7 +69,7 @@ pipeline {
              steps {
 				  echo "Sonar Scanner: Start Code Analysis"
                   withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:$JOB_NAME /n:$JOB_NAME /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
                   }
              }
         }
