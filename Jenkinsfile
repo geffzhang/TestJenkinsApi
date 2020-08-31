@@ -3,7 +3,7 @@ pipeline {
 		
     environment {
 	scannerHome = tool name: 'sonar_scanner_dotnet'
-	registry = 'rajivgogia/productmanagementapi'
+	registry = 'rajivgogia/productmanagementapi'	
    }
 	
 	options {
@@ -33,27 +33,39 @@ pipeline {
                   checkout scm
              }
         }
-       // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
-        stage('Restore packages'){
+
+        stage('nuget restore'){
             steps{
-                  echo "Dotnet Restore Step"
+                  echo "Nuget Restore Step"
                   bat "dotnet restore"
             }
         }
         
-        stage('Clean'){
-            steps{
-                  echo "Clean Step"
-                  bat "dotnet clean"
+		stage('Sonar Scanner: Start Code Analysis'){
+			
+			when {
+                branch 'master'
             }
-        }
-        
-         stage('Build') {
+			
             steps {
+				  echo "Sonar Scanner: Start Code Analysis"
+                  withSonarQubeEnv('Test_Sonar') {
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
+                  }
+             }
+        }
+		
+		
+        stage('Code Build') {
+            steps {
+				  //Cleans the output of a project
+				  echo "Clean Previous Build"
+                  bat "dotnet clean"
+				  
+				  //Builds the project and all of its dependencies
                   echo "Build Step"
-                  bat "dotnet build"
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
             }
-         
         }
         
         stage('Test: Unit Test') {
@@ -62,23 +74,7 @@ pipeline {
                   bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
             }
         }
-		
-       stage('Sonar Scanner: Start Code Analysis'){
-             steps {
-				  echo "Sonar Scanner: Start Code Analysis"
-                  withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
-                  }
-             }
-        }
-		
-		stage('Sonar Scanner: Build'){
-             steps {
-				  echo "Sonar Scanner: Build"
-                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
-             }
-        }
-		
+
 		stage('SonarQube Analysis end'){
              steps {
 				   echo "SonarQube Analysis end"
