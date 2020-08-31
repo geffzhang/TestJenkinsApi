@@ -7,24 +7,22 @@ pipeline {
    }
 	
 	options {
-        //Append timestamp to the console output
+        //Prepend all console output generated during stages with the time at which the line was emitted.
 		timestamps()
 		
+		//Set a timeout period for the Pipeline run, after which Jenkins should abort the Pipeline
 		timeout(time: 1, unit: 'HOURS') 
 		
+		//Skip checking out code from source control by default in the agent directive
 		skipDefaultCheckout()
 		
 		buildDiscarder(logRotator(
 			// number of build logs to keep
             numToKeepStr:'3',
             // history to keep in days
-            daysToKeepStr: '15',
-            // artifacts are kept for days
-            artifactDaysToKeepStr: '15',
-            // number of builds have their artifacts kept
-            artifactNumToKeepStr: '5'))
+            daysToKeepStr: '15'
+			))
     }
-	
     
     stages {
         
