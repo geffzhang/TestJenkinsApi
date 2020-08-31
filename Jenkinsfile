@@ -34,6 +34,7 @@ pipeline {
 				  echo "hello! I'm in ${BRANCH_NAME} environment"
                   checkout scm
 
+				  script{
 				  //docker port allocation as per branch name
 				  if(BRANCH_NAME == "master")
 				  {
@@ -42,7 +43,7 @@ pipeline {
 				  {
 					echo "6100"
 				  }
-				  
+				  }
 				    //load user.properties file
 				  script{
 						properties = readProperties file: 'user.properties'
