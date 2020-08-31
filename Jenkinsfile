@@ -50,7 +50,7 @@ pipeline {
             steps {
 				  echo "Sonar Scanner: Start Code Analysis"
                   withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
                   }
              }
         }
@@ -76,10 +76,14 @@ pipeline {
         }
 
 		stage('SonarQube Analysis end'){
-             steps {
+			when {
+                branch 'master'
+            }
+            
+			steps {
 				   echo "SonarQube Analysis end"
                    withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
                    }
              }
         }
