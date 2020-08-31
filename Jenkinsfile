@@ -26,10 +26,10 @@ pipeline {
     
     stages {
         
-        stage('Checkout') {
+        stage('Start') {
             steps {
-                  echo "Git Checkout Step"
-				  echo env.BRANCH_NAME
+                  echo "hello! I'm in ${BRANCH_NAME} environment"
+				  //echo env.BRANCH_NAME
                   checkout scm
              }
         }
