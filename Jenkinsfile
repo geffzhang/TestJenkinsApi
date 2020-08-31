@@ -44,7 +44,7 @@ pipeline {
 						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties}"
 				}
                   echo "Nuget Restore Step"
-				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties[user.employeeid]}"
+				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties.user.employeeid}"
                   bat "dotnet restore"
             }
         }
