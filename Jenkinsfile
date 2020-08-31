@@ -38,12 +38,11 @@ pipeline {
         }
 
         stage('nuget restore'){
-			script{
+            steps{
+				script{
 						properties = readProperties file: 'user.properties'
 						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties.employeeid}"
-			}
-			
-            steps{
+				}
                   echo "Nuget Restore Step"
                   bat "dotnet restore"
             }
