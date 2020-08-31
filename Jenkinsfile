@@ -47,7 +47,7 @@ pipeline {
             steps {
 			
 					script {
-						loadProperties()
+						properties = readProperties file: '"${workspace}/user.properties"'
 						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties.employeeid}"
 					}
              }
