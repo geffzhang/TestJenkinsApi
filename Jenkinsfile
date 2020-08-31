@@ -6,6 +6,7 @@ pipeline {
 	registry = 'rajivgogia/productmanagementapi'
 	properties = null 	
 	docker_port = null
+	username = 'rajivgogia'
    }
    
 	options {
@@ -110,7 +111,7 @@ pipeline {
 		stage('Docker Image') {
 		  steps{
 			echo "Docker Image Step"
-			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
+			bat "docker build -t i_${username}${BRANCH_NAME} --no-cache -f Dockerfile ."
 		  }
 		}
 		
