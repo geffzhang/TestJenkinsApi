@@ -3,7 +3,8 @@ pipeline {
 		
     environment {
 	scannerHome = tool name: 'sonar_scanner_dotnet'
-	registry = 'rajivgogia/productmanagementapi'
+	registry = 'rajivgogia/productmanagementapi',
+	
    }
 	
 	options {
@@ -64,7 +65,7 @@ pipeline {
 				  
 				  //Builds the project and all of its dependencies
                   echo "Build Step"
-                  bat "dotnet build -c Release -o "ProductManagementApi/app/build""
+                  bat "dotnet build -c Release -o 'ProductManagementApi/app/build'"
             }
         }
         
