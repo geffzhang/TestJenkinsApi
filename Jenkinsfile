@@ -1,11 +1,12 @@
 pipeline {
     agent any
 		
-    environment {
+	environment {
 	scannerHome = tool name: 'sonar_scanner_dotnet'
-	registry = 'rajivgogia/productmanagementapi'	
+	registry = 'rajivgogia/productmanagementapi'
+	properties = null 	
    }
-	
+   
 	options {
         //Prepend all console output generated during stages with the time at which the line was emitted.
 		timestamps()
@@ -28,6 +29,11 @@ pipeline {
         
         stage('Start') {
             steps {
+			
+					script {
+						properties = readProperties file: './user.properties'
+						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties.employeeid}"
+					}
                   echo "hello! I'm in ${BRANCH_NAME} environment"
 				  //echo env.BRANCH_NAME
                   checkout scm
@@ -41,14 +47,14 @@ pipeline {
             }
         }
         
-		stage('Sonar Scanner: Start Code Analysis'){
+		stage('Start sonarqube analysis'){
 			
 			when {
                 branch 'master'
             }
 			
             steps {
-				  echo "Sonar Scanner: Start Code Analysis"
+				  echo "Start sonarqube analysis step"
                   withSonarQubeEnv('Test_Sonar') {
                    bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
                   }
@@ -56,32 +62,25 @@ pipeline {
         }
 		
 		
-        stage('Code Build') {
+        stage('Code build') {
             steps {
 				  //Cleans the output of a project
 				  echo "Clean Previous Build"
                   bat "dotnet clean"
 				  
 				  //Builds the project and all of its dependencies
-                  echo "Build Step"
+                  echo "Code Build"
                   bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
             }
         }
-        
-        stage('Test: Unit Test') {
-            steps {
-                  echo "Unit Testing Step"
-                  bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
-            }
-        }
 
-		stage('SonarQube Analysis end'){
+		stage('Stop sonarqube analysis'){
 			when {
                 branch 'master'
             }
             
 			steps {
-				   echo "SonarQube Analysis end"
+				   echo "Stop sonarqube analysis"
                    withSonarQubeEnv('Test_Sonar') {
                    bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
                    }
@@ -89,15 +88,19 @@ pipeline {
         }
 		
 		stage('Release Artifacts'){
-             steps{
+			when {
+                branch 'develop'
+            }
+			
+            steps{
 			   echo "Release Artifacts"
                bat 'dotnet publish -c Release'
              }
         }
 		
-		stage('Building Image') {
+		stage('Docker Image') {
 		  steps{
-			echo "Building Image"
+			echo "Docker Image Step"
 			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
 		  }
 		}
