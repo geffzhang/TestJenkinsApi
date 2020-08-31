@@ -28,7 +28,7 @@ pipeline {
         
         stage('Start') {
             steps {
-                  echo "hello! I'm in ${branch} environment"
+                  echo "hello! I'm in ${BRANCH_NAME} environment"
 				  //echo env.BRANCH_NAME
                   checkout scm
              }
