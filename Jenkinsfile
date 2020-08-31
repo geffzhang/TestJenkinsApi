@@ -1,3 +1,11 @@
+def loadProperties() {
+    node {
+        checkout scm
+        properties = readProperties file: 'user.properties'
+        echo "Immediate one ${properties.employeeid}"
+    }
+}
+
 pipeline {
     agent any
 		
@@ -31,7 +39,7 @@ pipeline {
             steps {
 			
 					script {
-						properties = readProperties file: 'user.properties'
+						loadProperties()
 						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties.employeeid}"
 					}
                   echo "hello! I'm in ${BRANCH_NAME} environment"
