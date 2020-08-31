@@ -2,16 +2,18 @@ pipeline {
     agent any
 		
     environment {
-	scannerHome = tool name: 'sonar-scanner-test'
+	scannerHome = tool name: 'sonar_scanner_dotnet'
 	registry = 'rajivgogia/productmanagementapi'
    }
 	
 	options {
-        //Append timestamp to the console output
+        //Prepend all console output generated during stages with the time at which the line was emitted
 		timestamps()
 		
+		//Set a timeout period for the Pipeline run, after which Jenkins should abort the Pipeline
 		timeout(time: 1, unit: 'HOURS') 
 		
+		//Skip checking out code from source control by default in the agent directive
 		skipDefaultCheckout()
 		
 		buildDiscarder(logRotator(
@@ -69,7 +71,7 @@ pipeline {
              steps {
 				  echo "Sonar Scanner: Start Code Analysis"
                   withSonarQubeEnv('Test_Sonar') {
-                  bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=c865e8826866d1160f011fac6dd18890c93a0b8e"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
                   }
              }
         }
@@ -85,7 +87,7 @@ pipeline {
              steps {
 				   echo "SonarQube Analysis end"
                    withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end /d:sonar.login=c865e8826866d1160f011fac6dd18890c93a0b8e"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
                    }
              }
         }
