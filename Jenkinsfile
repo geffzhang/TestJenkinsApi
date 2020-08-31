@@ -29,21 +29,22 @@ pipeline {
         
         stage('Start') {
             steps {
-			
-					
-                  echo "hello! I'm in ${BRANCH_NAME} environment"
+				  echo "hello! I'm in ${BRANCH_NAME} environment"
 				  //echo env.BRANCH_NAME
                   checkout scm
+				  
+				  //load user.properties file
+				  
+				  script{
+						properties = readProperties file: 'user.properties'
+						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']}"
+				  }
              }
         }
 
         stage('nuget restore'){
             steps{
-				script{
-						properties = readProperties file: 'user.properties'
-						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties}"
-						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']}"
-				}
+				  echo "1Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']}"
                   echo "Nuget Restore Step"
 				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties.user.employeeid}"
                   bat "dotnet restore"
