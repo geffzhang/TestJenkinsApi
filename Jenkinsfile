@@ -35,21 +35,128 @@ pipeline {
                   checkout scm
 
 				  script{
-				  //docker port allocation as per branch name
-				  if(BRANCH_NAME == "master")
-				  {
-					echo "6000"
-				  } else if(BRANCH_NAME == "develop")
-				  {
-					echo "6100"
+				  
+					  //docker port allocation as per branch name
+					  if(BRANCH_NAME == "master")
+					  {
+						docker_port = 6000
+					  } else if(BRANCH_NAME == "develop")
+					  {
+						docker_port = 6100
+					  }
+					  
+					  //load user.properties file
+					  properties = readProperties file: 'user.properties'
 				  }
-				  }
-				    //load user.properties file
-				  script{
-						properties = readProperties file: 'user.properties'
-				  }
-             }
+            }
+		}
+		stage('nuget restore'){
+            steps{
+				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']} with docker as ${docker_port}"
+                  echo "Nuget Restore Step"
+                  bat "dotnet restore"
+            }
         }
-	}
-	
+		stage('Start sonarqube analysis'){
+			
+			when {
+                branch 'master'
+            }
+			
+            steps {
+				  echo "Start sonarqube analysis step"
+                  withSonarQubeEnv('Test_Sonar') {
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
+                  }
+            }
+        }
+
+        stage('Code build') {
+            steps {
+				  //Cleans the output of a project
+				  echo "Clean Previous Build"
+                  bat "dotnet clean"
+				  
+				  //Builds the project and all of its dependencies
+                  echo "Code Build"
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
+            }
+        }
+
+		stage('Stop sonarqube analysis'){
+			when {
+                branch 'master'
+            }
+            
+			steps {
+				   echo "Stop sonarqube analysis"
+                   withSonarQubeEnv('Test_Sonar') {
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
+                   }
+            }
+        }
+		
+		stage('Release Artifacts'){
+			when {
+                branch 'develop'
+            }
+			
+            steps{
+			   echo "Release Artifacts"
+               bat 'dotnet publish -c Release'
+            }
+        }
+		
+		stage('Docker Image') {
+		  steps{
+			echo "Docker Image Step"
+			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
+		  }
+		}
+		
+		//stage('Change latest build tag Image') {
+		  //steps{
+			//   bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
+		  //}
+		//}
+		
+		stage('Move Image to Docker Private Registry') {
+          steps{
+					echo "Move Image to Docker Private Registry"
+                    withDockerRegistry([credentialsId: 'Docker', url: ""]) {
+                    bat "docker push ${registry}:${BUILD_NUMBER}"
+                }
+            }
+        }
+		
+        stage('Docker -- Stop & Removing Running Container') {
+          steps{
+					echo "Docker -- Stop & Removing Running Container"
+					script {
+						//def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
+						def containerId = powershell(returnStdout: true, script: "docker ps | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
+						if(containerId!= null && containerId!="") {
+						//bat "docker stop ProductManagementApi"
+						//bat "docker rm -f ProductManagementApi"
+						bat "docker stop ${containerId}"
+						bat "docker rm -f ${containerId}"
+						}	
+					}
+		  }
+		}		  
+	  
+		stage('Docker Deployment') {
+          steps{
+					echo "Docker Deployment"
+                    bat "docker run --name ProductManagementApi -d -p 5000:80 ${registry}:${BUILD_NUMBER}"
+          }
+        } 
+		
+        }
+		post {
+			always {
+				echo "Test Report Generation Step"
+				xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
+			}
+		}
 }
