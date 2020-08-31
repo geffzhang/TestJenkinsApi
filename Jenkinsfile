@@ -3,8 +3,7 @@ pipeline {
 		
     environment {
 	scannerHome = tool name: 'sonar_scanner_dotnet'
-	registry = 'rajivgogia/productmanagementapi',
-	
+	registry = 'rajivgogia/productmanagementapi'	
    }
 	
 	options {
