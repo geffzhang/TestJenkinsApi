@@ -1,9 +1,7 @@
 def loadProperties() {
     node {
         checkout scm
-		properties = new Properties()
-        File propertiesFile = new File("${workspace}/user.properties")
-        properties.load(propertiesFile.newDataInputStream())
+        properties = readProperties file: '"${workspace}/user.properties"'
         echo "Immediate one ${properties.employeeid}"
     }
 }
