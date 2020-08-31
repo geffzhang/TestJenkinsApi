@@ -37,14 +37,19 @@ pipeline {
         
         stage('Start') {
             steps {
+                  echo "hello! I'm in ${BRANCH_NAME} environment"
+				  //echo env.BRANCH_NAME
+                  checkout scm
+             }
+        }
+		
+		stage('Setup') {
+            steps {
 			
 					script {
 						loadProperties()
 						echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties.employeeid}"
 					}
-                  echo "hello! I'm in ${BRANCH_NAME} environment"
-				  //echo env.BRANCH_NAME
-                  checkout scm
              }
         }
 
