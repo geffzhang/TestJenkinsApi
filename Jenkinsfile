@@ -65,7 +65,7 @@ pipeline {
 				  
 				  //Builds the project and all of its dependencies
                   echo "Build Step"
-                  bat "dotnet build -c Release -o 'ProductManagementApi/app/build'"
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
             }
         }
         
