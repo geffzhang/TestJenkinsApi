@@ -28,32 +28,44 @@ pipeline {
         
         stage('Start') {
             steps {
-                  echo "hello! I'm in ${BRANCH_NAME} environment"
+                  echo "hello! I'm in ${branch} environment"
 				  //echo env.BRANCH_NAME
                   checkout scm
              }
         }
-       // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
-        stage('Restore packages'){
+
+        stage('nuget restore'){
             steps{
-                  echo "Dotnet Restore Step"
+                  echo "Nuget Restore Step"
                   bat "dotnet restore"
             }
         }
         
-        stage('Clean'){
-            steps{
-                  echo "Clean Step"
-                  bat "dotnet clean"
+		stage('Sonar Scanner: Start Code Analysis'){
+			
+			when {
+                branch 'master'
             }
-        }
-        
-         stage('Build') {
+			
             steps {
+				  echo "Sonar Scanner: Start Code Analysis"
+                  withSonarQubeEnv('Test_Sonar') {
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
+                  }
+             }
+        }
+		
+		
+        stage('Code Build') {
+            steps {
+				  //Cleans the output of a project
+				  echo "Clean Previous Build"
+                  bat "dotnet clean"
+				  
+				  //Builds the project and all of its dependencies
                   echo "Build Step"
                   bat "dotnet build"
             }
-         
         }
         
         stage('Test: Unit Test') {
