@@ -2,11 +2,11 @@ pipeline {
     agent any
 		
 	environment {
-	scannerHome = tool name: 'sonar_scanner_dotnet'
-	registry = 'rajivgogia/productmanagementapi'
-	properties = null 	
-	docker_port = null
-	username = 'rajivgogia'
+		scannerHome = tool name: 'sonar_scanner_dotnet'
+		registry = 'rajivgogia/productmanagementapi'
+		properties = null 	
+		docker_port = null
+		username = 'rajivgogia'
    }
    
 	options {
@@ -111,7 +111,7 @@ pipeline {
 		stage('Docker Image') {
 		  steps{
 			echo "Docker Image Step"
-			bat "docker build -t i_${username}${BRANCH_NAME} --no-cache -f Dockerfile ."
+			bat "docker build -t i_${username}_${BRANCH_NAME} --no-cache -f Dockerfile ."
 		  }
 		}
 		
@@ -135,7 +135,7 @@ pipeline {
 					echo "Docker -- Stop & Removing Running Container"
 					script {
 						//def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
-						def containerId = powershell(returnStdout: true, script: "docker ps | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
+						def containerId = powershell(returnStdout: true, script: "docker ps | Select-String ${username} | %{ (\$_ -split \" \")[0]}");
 						if(containerId!= null && containerId!="") {
 						//bat "docker stop ProductManagementApi"
 						//bat "docker rm -f ProductManagementApi"
@@ -149,7 +149,7 @@ pipeline {
 		stage('Docker Deployment') {
           steps{
 					echo "Docker Deployment"
-                    bat "docker run --name ProductManagementApi -d -p 5000:80 ${registry}:${BUILD_NUMBER}"
+                    bat "docker run --name ProductManagementApi -d -p ${username}:80 ${registry}:${BUILD_NUMBER}"
           }
         } 
 		
