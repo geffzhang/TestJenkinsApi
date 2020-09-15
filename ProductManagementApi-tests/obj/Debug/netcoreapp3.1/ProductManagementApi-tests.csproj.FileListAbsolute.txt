@@ -205,11 +205,11 @@ D:\Documents\Nagp\Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\obj\
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\appsettings.json
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\ProductManagementApi.exe
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\NUnit3.TestAdapter.dll
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\NUnit3.TestAdapter.pdb
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\nunit.engine.dll
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\nunit.engine.api.dll
-D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\ProductManagementApi.exe
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\ProductManagementApi-tests.deps.json
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\ProductManagementApi-tests.runtimeconfig.json
 D:\Study\Nagp\2. Devops\Projects\TestJenkinsApi\ProductManagementApi-tests\bin\Debug\netcoreapp3.1\ProductManagementApi-tests.runtimeconfig.dev.json
