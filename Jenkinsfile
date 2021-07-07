@@ -138,10 +138,8 @@ pipeline {
 					echo "Docker -- Stop & Removing Running Container"
 					script {
 						//def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
-						def containerId = powershell(returnStdout: true, script: "docker ps | Select-String ${username} | %{ (\$_ -split \" \")[0]}");
+						def containerId = powershell(returnStdout: true, script: "docker ps -a | Select-String ${userName}-${BRANCH_NAME} | %{ (\$_ -split \" \")[0]}");
 						if(containerId!= null && containerId!="") {
-						//bat "docker stop ProductManagementApi"
-						//bat "docker rm -f ProductManagementApi"
 						bat "docker stop ${containerId}"
 						bat "docker rm -f ${containerId}"
 						}	
@@ -152,7 +150,7 @@ pipeline {
 		stage('Docker Deployment') {
           steps{
 					echo "Docker Deployment"
-                    bat "docker run --name ProductManagementApi -d -p ${username}:80 ${registry}:${BUILD_NUMBER}"
+                    bat "docker run --name ProductManagementApi -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
           }
         } 
 		
