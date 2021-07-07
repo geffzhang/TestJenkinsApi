@@ -124,7 +124,7 @@ pipeline {
 		stage('Move Image to Docker Private Registry') {
           steps{
 					echo "Move Image to Docker Private Registry"
-                    withDockerRegistry([credentialsId: 'Docker', url: ""]) {
+                    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
                 }
             }
