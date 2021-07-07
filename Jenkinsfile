@@ -99,20 +99,7 @@ pipeline {
             }
         }
 		
-        stage('Docker -- Stop & Removing Running Container') {
-          steps{
-					echo "Docker -- Stop & Removing Running Container"
-					script {
-						def containerId = powershell(returnStdout: true, script: "docker ps -a | Select-String ProductManagementApi | %{ (\$_ -split \" \")[0]}");
-						if(containerId!= null && containerId!="") {
-						bat "docker stop ${containerId}"
-						bat "docker rm -f ${containerId}"
-						}	
-					}
-		  }
-		}		  
-	  
-		stage('Docker Deployment') {
+           stage('Docker Deployment') {
           steps{
 		    echo "Docker Deployment"
                     bat "docker run --name ProductManagementApi -d -p 7100:80 ${registry}:${BUILD_NUMBER}"
