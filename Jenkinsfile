@@ -31,26 +31,18 @@ pipeline {
         
         stage('Start') {
             steps {
-				  //Welcome message
-				  echo "hello! I'm in ${BRANCH_NAME} environment"
-                  checkout scm
+				  checkout scm
 
 				  script{
 				  
-					  //docker port allocation as per branch name
-					  if(BRANCH_NAME == "master")
-					  {
-						docker_port = 6000
-					  } else if(BRANCH_NAME == "develop")
-					  {
-						docker_port = 6100
-					  }
+					  docker_port = 7100
 					  
 					  //load user.properties file
 					  properties = readProperties file: 'user.properties'
 				  }
             }
 		}
+		
 		stage('nuget restore'){
             steps{
 				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']} with docker as ${docker_port}"
@@ -58,12 +50,8 @@ pipeline {
                   bat "dotnet restore"
             }
         }
+		
 		stage('Start sonarqube analysis'){
-			
-			when {
-                branch 'master'
-            }
-			
             steps {
 				  echo "Start sonarqube analysis step"
                   withSonarQubeEnv('Test_Sonar') {
@@ -85,10 +73,6 @@ pipeline {
         }
 
 		stage('Stop sonarqube analysis'){
-			when {
-                branch 'master'
-            }
-            
 			steps {
 				   echo "Stop sonarqube analysis"
                    withSonarQubeEnv('Test_Sonar') {
@@ -98,11 +82,7 @@ pipeline {
         }
 		
 		stage('Release Artifacts'){
-			when {
-                branch 'develop'
-            }
-			
-            steps{
+			steps{
 			   echo "Release Artifacts"
                bat 'dotnet publish -c Release'
             }
@@ -111,14 +91,14 @@ pipeline {
 		stage('Docker Image') {
 		  steps{
 			echo "Docker Image Step"
-			bat "docker build -t i_${username}_${BRANCH_NAME} --no-cache -f Dockerfile ."
+			bat "docker build -t i_${username}_Master --no-cache -f Dockerfile ."
 		  }
 		}
 		
-	stage('Move Image to Docker Hub') {
+		stage('Move Image to Docker Hub') {
           steps{
 		    echo "Move Image to Docker Hub"
-                    bat "docker tag i_${username}_${BRANCH_NAME} ${registry}:${BUILD_NUMBER}"
+                    bat "docker tag i_${username}_Master ${registry}:${BUILD_NUMBER}"
 		  
                     withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
@@ -130,8 +110,7 @@ pipeline {
           steps{
 					echo "Docker -- Stop & Removing Running Container"
 					script {
-						//def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
-						def containerId = powershell(returnStdout: true, script: "docker ps -a | Select-String ${userName}-${BRANCH_NAME} | %{ (\$_ -split \" \")[0]}");
+						def containerId = powershell(returnStdout: true, script: "docker ps -a | Select-String ProductManagementApi | %{ (\$_ -split \" \")[0]}");
 						if(containerId!= null && containerId!="") {
 						bat "docker stop ${containerId}"
 						bat "docker rm -f ${containerId}"
