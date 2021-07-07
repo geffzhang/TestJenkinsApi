@@ -115,17 +115,10 @@ pipeline {
 		  }
 		}
 		
-		//stage('Change latest build tag Image') {
-		  //steps{
-			//   bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
-		  //}
-		//}
-		
-		stage('Move Image to Docker Private Registry') {
+	stage('Move Image to Docker Hub') {
           steps{
-					echo "Move Image to Docker Private Registry"
-		   //To push an image to a private registry and not the central Docker registry we need to tag it with the registry hostname and port.
-                    bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:${BUILD_NUMBER}"
+		    echo "Move Image to Docker Hub"
+                    bat "docker tag i_${username}_${BRANCH_NAME} ${registry}:${BUILD_NUMBER}"
 		  
                     withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
@@ -149,7 +142,7 @@ pipeline {
 	  
 		stage('Docker Deployment') {
           steps{
-					echo "Docker Deployment"
+		    echo "Docker Deployment"
                     bat "docker run --name ProductManagementApi -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
           }
         } 
