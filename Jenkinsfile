@@ -124,6 +124,9 @@ pipeline {
 		stage('Move Image to Docker Private Registry') {
           steps{
 					echo "Move Image to Docker Private Registry"
+		   //To push an image to a private registry and not the central Docker registry we need to tag it with the registry hostname and port.
+                    bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:${BUILD_NUMBER}"
+		  
                     withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
                 }
