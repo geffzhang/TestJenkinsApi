@@ -68,7 +68,7 @@ pipeline {
 				  
 				  //Builds the project and all of its dependencies
                   echo "Code Build"
-                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'		      
             }
         }
 
@@ -80,17 +80,10 @@ pipeline {
                    }
             }
         }
-		
-		stage('Release Artifacts'){
-			steps{
-			   echo "Release Artifacts"
-               bat 'dotnet publish -c Release'
-            }
-        }
-		
 		stage('Docker Image') {
 		  steps{
 			echo "Docker Image Step"
+			bat 'dotnet publish -c Release'
 			bat "docker build -t i_${username}_master --no-cache -f Dockerfile ."
 		  }
 		}
@@ -122,7 +115,7 @@ pipeline {
 		stage('Docker Deployment') {
           steps{
 		    echo "Docker Deployment"
-                    bat "docker run --name ProductManagementApi -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
+                    bat "docker run --name ProductManagementApi -d -p 7100:80 ${registry}:${BUILD_NUMBER}"
           }
         } 
 		
