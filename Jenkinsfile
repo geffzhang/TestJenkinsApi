@@ -29,88 +29,15 @@ pipeline {
     
     stages {
         
-        stage('Start') {
-            steps {
-				  checkout scm
-
-				  script{
-				  
-					  docker_port = 7100
-					  
-					  //load user.properties file
-					  properties = readProperties file: 'user.properties'
-				  }
-            }
-		}
-		
-		stage('nuget restore'){
+        	
+           stage('Deploy to GKE') {
             steps{
-				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']} with docker as ${docker_port}"
-                  echo "Nuget Restore Step"
-                  bat "dotnet restore"
+                bat "kubectl apply -f deployment.yaml"
+                step([$class: 'KubernetesEngineBuilder', projectId: 'testjenkinsapi-319316', clusterName: 'dotnet-api', location: 'us-central1-c', manifestPattern: 'deployment.yaml', credentialsId: 'TestJenkinsApi', verifyDeployments: true])
             }
         }
 		
-		stage('Start sonarqube analysis'){
-            steps {
-				  echo "Start sonarqube analysis step"
-                  withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
-                  }
-            }
         }
 
-        stage('Code build') {
-            steps {
-				  //Cleans the output of a project
-				  echo "Clean Previous Build"
-                  bat "dotnet clean"
-				  
-				  //Builds the project and all of its dependencies
-                  echo "Code Build"
-                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'		      
-            }
-        }
-
-		stage('Stop sonarqube analysis'){
-			steps {
-				   echo "Stop sonarqube analysis"
-                   withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
-                   }
-            }
-        }
-		stage('Docker Image') {
-		  steps{
-			echo "Docker Image Step"
-			bat 'dotnet publish -c Release'
-			bat "docker build -t i_${username}_master --no-cache -f Dockerfile ."
-		  }
-		}
 		
-		stage('Move Image to Docker Hub') {
-          steps{
-		    echo "Move Image to Docker Hub"
-                    bat "docker tag i_${username}_master ${registry}:${BUILD_NUMBER}"
-		  
-                    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
-                }
-            }
-        }
-		
-           stage('Docker Deployment') {
-          steps{
-		    echo "Docker Deployment"
-                    bat "docker run --name ProductManagementApi -d -p 7100:80 ${registry}:${BUILD_NUMBER}"
-          }
-        } 
-		
-        }
-		post {
-			always {
-				echo "Test Report Generation Step"
-				xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
-			}
-		}
 }
