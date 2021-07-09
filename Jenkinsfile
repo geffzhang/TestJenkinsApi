@@ -32,7 +32,7 @@ pipeline {
         	
            stage('Deploy to GKE') {
             steps{
-                bat "kubectl apply -f deployment.yaml ."
+                bat "Kubectl apply -f deployment.yaml ."
                 step([$class: 'KubernetesEngineBuilder', projectId: 'testjenkinsapi-319316', clusterName: 'dotnet-api', location: 'us-central1-c', manifestPattern: 'deployment.yaml', credentialsId: 'TestJenkinsApi', verifyDeployments: true])
             }
         }
