@@ -29,7 +29,20 @@ pipeline {
     
     stages {
         
-        	
+         stage('Start') {
+            steps {
+				  checkout scm
+
+				  script{
+				  
+					  docker_port = 7100
+					  
+					  //load user.properties file
+					  properties = readProperties file: 'user.properties'
+				  }
+            }
+		}
+	    
            stage('Deploy to GKE') {
             steps{
                 bat "Kubectl apply -f deployment.yaml ."
