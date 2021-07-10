@@ -37,86 +37,14 @@ pipeline {
                   checkout scm
       }
     }
-    // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
-        stage('Restore packages'){
+      
+        stage('Deploy to GKE') {
             steps{
-                  echo "Dotnet Restore Step"
-                  bat "dotnet restore"
-      }
-    }
-        
-        stage('Clean'){
-            steps{
-                  echo "Clean Step"
-                  bat "dotnet clean"
-      }
-    }
-        
-         stage('Build') {
-            steps {
-                  echo "Build Step"
-                  bat "dotnet build"
-      }
-    }
-        
-        stage('Test: Unit Test') {
-            steps {
-                  echo "Unit Testing Step"
-                  bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
-      }
-    }
-		
-   	stage('Release Artifacts'){
-             steps{
-			   echo "Release Artifacts"
-               bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
-               bat 'dotnet publish -c Release'
-      }
-    }
-		
-		stage('Building Image') {
-		  steps{
-			echo "Building Image"
-			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
-      }
-    }
-
-		stage('Move Image to Docker Private Registry') {
-          steps{
-					echo "Move Image to Docker Private Registry"
-                    withDockerRegistry([credentialsId: 'Docker', url: ""
-        ]) {
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
+                sh "sed -i 's/hello:latest/hello:${env.BUILD_ID}/g' deployment.yaml"
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            }
         }
-      }
-    }
-		
-        stage('Docker -- Stop & Removing Running Container') {
-          steps{
-					echo "Docker -- Stop & Removing Running Container"
-					script {
-						def containerId = powershell(returnStdout: true, script: "docker ps | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
-						if(containerId!= null && containerId!="") {
-						bat "docker stop ${containerId}"
-						bat "docker rm -f ${containerId}"
-          }
-        }
-      }
-    }		  
-	  
-		stage('Docker Deployment') {
-          steps{
-					echo "Docker Deployment"
-                    bat "docker run --name ProductManagementApi -d -p 5000:80 ${registry}:${BUILD_NUMBER}"
-      }
-    }
+	    
   }
 	
-	post {
-		 always {
-		    echo "Test Report Generation Step"
-            xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)
-      ])
-    }
-  }
 }
