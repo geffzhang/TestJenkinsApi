@@ -7,7 +7,7 @@ pipeline {
 		properties = null 	
 		docker_port = null
 		username = 'rajivgogia'
-   }
+    }
    
 	options {
         //Prepend all console output generated during stages with the time at which the line was emitted.
@@ -22,7 +22,7 @@ pipeline {
 		buildDiscarder(logRotator(
 			// number of build logs to keep
             numToKeepStr:'3',
-            // history to keep in days
+        // history to keep in days
             daysToKeepStr: '15'
 			))
     }
@@ -36,21 +36,10 @@ pipeline {
 				  script{
 				  
 					  docker_port = 7100
-					  
-					  //load user.properties file
+                    //load user.properties file
 					  properties = readProperties file: 'user.properties'
-				  }
-            }
-		}
-	    
-           stage('Deploy to GKE') {
-            steps{
-                bat "Kubectl apply -f deployment.yaml ."
-                step([$class: 'KubernetesEngineBuilder', projectId: 'testjenkinsapi-319316', clusterName: 'dotnet-api', location: 'us-central1-c', manifestPattern: 'deployment.yaml', credentialsId: 'TestJenkinsApi', verifyDeployments: true])
+                }
             }
         }
-		
-        }
-
-		
+    }
 }
