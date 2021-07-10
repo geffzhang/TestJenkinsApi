@@ -40,7 +40,7 @@ pipeline {
     // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
         stage('Restore packages'){
             steps{
-                  echo "Dotnet Restore Step"F
+                  echo "Dotnet Restore Step"
                   bat "dotnet restore"
       }
     }
