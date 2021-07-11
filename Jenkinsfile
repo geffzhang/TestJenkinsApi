@@ -90,7 +90,7 @@ stages {
 		stage('Move Image to Docker Private Registry') {
           steps{
 				echo "Move Image to Docker Private Registry"
-                withDockerRegistry([credentialsId: 'Docker', url: ""]) {
+                withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                 bat "docker push ${registry}:${BUILD_NUMBER}"
                 }
           }
@@ -105,4 +105,10 @@ stages {
             }
         }
   }
+post {
+			always {
+				echo "Test Report Generation Step"
+				xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
+			}
+		}
 }
