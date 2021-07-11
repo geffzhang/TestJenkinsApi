@@ -68,7 +68,7 @@ stages {
 		    echo "Get-content deployment.yaml | %{\$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"
 		    
 		    script{
-		    bat "Get-content deployment.yaml | %{\$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"); 
+		    bat "Get-content deployment.yaml | %{\$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"; 
 		    }
 		step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-kce.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
