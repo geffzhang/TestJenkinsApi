@@ -85,21 +85,19 @@ pipeline {
 		
 		stage('Move Image to Docker Hub') {
           steps{
-		    echo "Move Image to Docker Hub"
-                    bat "docker tag i_${username}_master ${registry}:${BUILD_NUMBER}"
-		  
-                    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
+		    bat "docker tag i_${username}_master ${registry}:${BUILD_NUMBER}"
+                    bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
+                    
+		    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
-                }
+                    bat "docker push ${registry}:latest"
+            	    }
             }
         }
 		
         stage('Deploy to GKE') {
             steps{
-		         script{
-		         powershell "Get-content deployment.yaml | %{\$_ -replace '${registry}:latest','${registry}:${BUILD_NUMBER}'} | Set-Content deployment-kce.yaml"; 
-		         }
-		         step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment-kce.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
+	         step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment-kce.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
             }
         }
     }
