@@ -84,8 +84,7 @@ pipeline {
 		stage('Move Image to Docker Private Registry') {
           steps{
 					echo "Move Image to Docker Private Registry"
-                    withDockerRegistry([credentialsId: 'Docker', url: ""Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml
-        ]) {
+                    withDockerRegistry([credentialsId: 'Docker', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
 			    echo "1_Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"
         }
