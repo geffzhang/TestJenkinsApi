@@ -1,111 +1,110 @@
 pipeline {
     agent any
 		
-    environment {
-	scannerHome = tool name: 'sonar_scanner_dotnet'
-	registry = 'rajivgogia/productmanagementapi'
-    PROJECT_ID = 'testjenkinsapi-319316'
-    CLUSTER_NAME = 'dotnet-api'
-    LOCATION = 'us-central1-c'
-    CREDENTIALS_ID = 'TestJenkinsApi'
-  }
-	
-stages {
+	environment {
+		scannerHome = tool name: 'sonar_scanner_dotnet'
+		registry = 'rajivgogia/productmanagementapi'
+		properties = null 	
+		username = 'rajivgogia'
+        project_id = 'testjenkinsapi-319316'
+        cluster_name = 'dotnet-api'
+        location = 'us-central1-c'
+        credentials_id = 'TestJenkinsApi'
+   }
+   
+	options {
+        //Prepend all console output generated during stages with the time at which the line was emitted.
+		timestamps()
+		
+		//Set a timeout period for the Pipeline run, after which Jenkins should abort the Pipeline
+		timeout(time: 1, unit: 'HOURS') 
+		
+		//Skip checking out code from source control by default in the agent directive
+		skipDefaultCheckout()
+		
+		buildDiscarder(logRotator(
+			// number of build logs to keep
+            numToKeepStr:'3',
+            // history to keep in days
+            daysToKeepStr: '15'
+			))
+    }
+    
+    stages {
         
-        stage('Checkout') {
+        stage('Start') {
             steps {
-                  echo "Git Checkout Step"
-				  echo env.BRANCH_NAME
-                  checkout scm
+				  
+				  checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'Github', url: 'https://github.com/Rajivgogia7/TestJenkinsApi.git']]])
             }
-        }
-        
-        stage('Restore packages'){
+		}
+		
+		stage('nuget restore'){
             steps{
-                  echo "Dotnet Restore Step"
+				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']}"
+                  echo "Nuget Restore Step"
                   bat "dotnet restore"
             }
         }
-        
-        stage('Clean'){
-            steps{
-                  echo "Clean Step"
-                  bat "dotnet clean"
-            }
-        }
-        
-        stage('Build') {
+		
+		stage('Start sonarqube analysis'){
             steps {
-                  echo "Build Step"
-                  bat "dotnet build"
-            }
-        }
-
-        stage('Test: Unit Test') {
-            steps {
-                  echo "Unit Testing Step"
-                  bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
-            }
-        }
-
-        stage('Sonar Scanner: Start Code Analysis'){
-            steps {
-				  echo "Sonar Scanner: Start Code Analysis"
+				  echo "Start sonarqube analysis step"
                   withSonarQubeEnv('Test_Sonar') {
-                       bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
                   }
-             }
+            }
         }
 
-        stage('Sonar Scanner: Build'){
-             steps {
-				  echo "Sonar Scanner: Build"
-                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
-             }
+        stage('Code build') {
+            steps {
+				  //Cleans the output of a project
+				  echo "Clean Previous Build"
+                  bat "dotnet clean"
+				  
+				  //Builds the project and all of its dependencies
+                  echo "Code Build"
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'		      
+            }
         }
 
-        stage('SonarQube Analysis end'){
-             steps {
-				   echo "SonarQube Analysis end"
+		stage('Stop sonarqube analysis'){
+			steps {
+				   echo "Stop sonarqube analysis"
                    withSonarQubeEnv('Test_Sonar') {
                    bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
                    }
-             }
-        }
-
-   	    stage('Release Artifacts'){
-            steps{
-			   echo "Release Artifacts"
-               bat 'dotnet publish -c Release'
             }
         }
+		stage('Docker Image') {
+		  steps{
+			echo "Docker Image Step"
+			bat 'dotnet publish -c Release'
+			bat "docker build -t i_${username}_master --no-cache -f Dockerfile ."
+		  }
+		}
 		
-		stage('Build Docker Image') {
-		    steps{
-			echo "Building Docker Image"
-			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
-            }
-        }
-
-		stage('Move Image to Docker Private Registry') {
+		stage('Move Image to Docker Hub') {
           steps{
-				echo "Move Image to Docker Private Registry"
-                withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
-                bat "docker push ${registry}:${BUILD_NUMBER}"
+		    echo "Move Image to Docker Hub"
+                    bat "docker tag i_${username}_master ${registry}:${BUILD_NUMBER}"
+		  
+                    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
+                    bat "docker push ${registry}:${BUILD_NUMBER}"
                 }
-          }
+            }
         }
 		
         stage('Deploy to GKE') {
             steps{
 		         script{
-		                 powershell "Get-content deployment.yaml | %{\$_ -replace '${registry}:latest','${registry}:${BUILD_NUMBER}'} | Set-Content deployment-kce.yaml"; 
+		         powershell "Get-content deployment.yaml | %{\$_ -replace '${registry}:latest','${registry}:${BUILD_NUMBER}'} | Set-Content deployment-kce.yaml"; 
 		         }
-		         step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-kce.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+		         step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment-kce.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
             }
         }
-  }
-post {
+    }
+		post {
 			always {
 				echo "Test Report Generation Step"
 				xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
