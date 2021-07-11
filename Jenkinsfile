@@ -89,9 +89,11 @@ pipeline {
                     bat "docker tag i_${username}_master ${registry}:latest"
 
 		    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
+			    
                     bat "docker push ${registry}:${BUILD_NUMBER}"
                     bat "docker push ${registry}:latest"
-            	    }
+            	    
+		    }
             }
         }
 		
