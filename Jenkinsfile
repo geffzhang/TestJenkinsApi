@@ -32,12 +32,11 @@ pipeline {
     
     stages {
         
-        stage('Start') {
+        stage('Checkout') {
             steps {
-				  
-				  checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'Github', url: 'https://github.com/Rajivgogia7/TestJenkinsApi.git']]])
-            }
-		}
+			checkout scm	  
+	     }
+	}
 		
 		stage('nuget restore'){
             steps{
