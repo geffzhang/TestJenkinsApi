@@ -84,15 +84,19 @@ pipeline {
 		stage('Move Image to Docker Private Registry') {
           steps{
 					echo "Move Image to Docker Private Registry"
-                    withDockerRegistry([credentialsId: 'Docker', url: ""
+                    withDockerRegistry([credentialsId: 'Docker', url: ""Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml
         ]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
+			    echo "1_Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"
         }
       }
     }
 		
        stage('Deploy to GKE') {
             steps{
+		    
+		    echo "Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"
+		    
 		    script{
 		     powershell(returnStdout: false, script: "Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml");
 		    }
