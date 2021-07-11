@@ -15,71 +15,94 @@ stages {
         stage('Checkout') {
             steps {
                   echo "Git Checkout Step"
-				          echo env.BRANCH_NAME
+				  echo env.BRANCH_NAME
                   checkout scm
-      }
-    }
-    // https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build
+            }
+        }
+        
         stage('Restore packages'){
             steps{
                   echo "Dotnet Restore Step"
                   bat "dotnet restore"
-      }
-    }
+            }
+        }
         
         stage('Clean'){
             steps{
                   echo "Clean Step"
                   bat "dotnet clean"
-      }
-    }
+            }
+        }
         
-         stage('Build') {
+        stage('Build') {
             steps {
                   echo "Build Step"
                   bat "dotnet build"
-      }
-    }
+            }
+        }
 
-   	stage('Release Artifacts'){
-             steps{
+        stage('Test: Unit Test') {
+            steps {
+                  echo "Unit Testing Step"
+                  bat "dotnet test ProductManagementApi-tests\\ProductManagementApi-tests.csproj -l:trx;LogFileName=ProductManagementApiTestOutput.xml"
+            }
+        }
+
+        stage('Sonar Scanner: Start Code Analysis'){
+            steps {
+				  echo "Sonar Scanner: Start Code Analysis"
+                  withSonarQubeEnv('Test_Sonar') {
+                        bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0 /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
+                  }
+             }
+        }
+
+        stage('Sonar Scanner: Build'){
+             steps {
+				  echo "Sonar Scanner: Build"
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
+             }
+        }
+
+        stage('SonarQube Analysis end'){
+             steps {
+				   echo "SonarQube Analysis end"
+                   withSonarQubeEnv('Test_Sonar') {
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end /d:sonar.login=6fc7555c46fe82e4805624f633db97c54819c644"
+                   }
+             }
+        }
+
+   	    stage('Release Artifacts'){
+            steps{
 			   echo "Release Artifacts"
-               bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
                bat 'dotnet publish -c Release'
-      }
-    }
+            }
+        }
 		
-		stage('Building Image') {
-		  steps{
-			echo "Building Image"
+		stage('Build Docker Image') {
+		    steps{
+			echo "Building Docker Image"
 			bat "docker build -t ${registry}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
-      }
-    }
+            }
+        }
 
 		stage('Move Image to Docker Private Registry') {
           steps{
-					echo "Move Image to Docker Private Registry"
-                    withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
-			        echo "1_Get-content deployment.yaml | %{\$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"
+				echo "Move Image to Docker Private Registry"
+                withDockerRegistry([credentialsId: 'Docker', url: ""]) {
+                bat "docker push ${registry}:${BUILD_NUMBER}"
+                }
+          }
         }
-      }
-    }
 		
-       stage('Deploy to GKE') {
+        stage('Deploy to GKE') {
             steps{
-		    
-		    echo "Get-content deployment.yaml | %{\$_ -replace '${registry}:latest','${registry}:${BUILD_NUMBER}'} | Set-Content deployment-kce.yaml"
-		    
-		    script{
-		    powershell "Get-content deployment.yaml | %{\$_ -replace '${registry}:latest','${registry}:${BUILD_NUMBER}'} | Set-Content deployment-kce.yaml"; 
-		    }
-		step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-kce.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+		         script{
+		                 powershell "Get-content deployment.yaml | %{\$_ -replace '${registry}:latest','${registry}:${BUILD_NUMBER}'} | Set-Content deployment-kce.yaml"; 
+		         }
+		         step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-kce.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
-	    
-	    
   }
-	
-
 }
