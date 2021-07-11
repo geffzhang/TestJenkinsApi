@@ -94,9 +94,9 @@ pipeline {
        stage('Deploy to GKE') {
             steps{
 		    script{
-		     powershell(returnStdout: false, script: "Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-final.yaml");
+		     powershell(returnStdout: false, script: "Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml");
 		    }
-		step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+		step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-kce.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
 	    
