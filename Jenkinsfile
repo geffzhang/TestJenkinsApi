@@ -6,11 +6,11 @@ pipeline {
 		registry = 'rajivgogia/productmanagementapi'
 		properties = null 	
 		username = 'rajivgogia'
-        project_id = 'testjenkinsapi-319316'
-        cluster_name = 'dotnet-api'
-        location = 'us-central1-c'
-        credentials_id = 'TestJenkinsApi'
-   }
+        	project_id = 'testjenkinsapi-319316'
+       		cluster_name = 'dotnet-api'
+        	location = 'us-central1-c'
+        	credentials_id = 'TestJenkinsApi'
+   	}	
    
 	options {
         //Prepend all console output generated during stages with the time at which the line was emitted.
@@ -86,8 +86,8 @@ pipeline {
 		stage('Move Image to Docker Hub') {
           steps{
 		    bat "docker tag i_${username}_master ${registry}:${BUILD_NUMBER}"
-                    bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
-                    
+                    bat "docker tag i_${username}_master ${registry}:latest"
+
 		    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
                     bat "docker push ${registry}:latest"
@@ -97,7 +97,7 @@ pipeline {
 		
         stage('Deploy to GKE') {
             steps{
-	         step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment-kce.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
+	         step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
             }
         }
     }
