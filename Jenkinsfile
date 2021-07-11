@@ -57,7 +57,7 @@ stages {
 					echo "Move Image to Docker Private Registry"
                     withDockerRegistry([credentialsId: 'Docker', url: ""]) {
                     bat "docker push ${registry}:${BUILD_NUMBER}"
-			        echo "1_Get-content deployment.yaml | %{$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"
+			        echo "1_Get-content deployment.yaml | %{\$_ -replace ${registry}:latest,${registry}:${BUILD_NUMBER}} | Set-Content deployment-kce.yaml"
         }
       }
     }
