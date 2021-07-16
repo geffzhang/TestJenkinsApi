@@ -7,7 +7,7 @@ pipeline {
 		properties = null 	
 		username = 'rajivgogia'
         	project_id = 'testjenkinsapi-319316'
-       		cluster_name = 'dotnet-api'
+       		cluster_name = 'dotnet-api-namespace'
         	location = 'us-central1-c'
         	credentials_id = 'TestJenkinsApi'
    	}	
