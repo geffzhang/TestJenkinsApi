@@ -97,12 +97,12 @@ pipeline {
             }
         }
 		
-        stage('Deploy to GKE') {
-            steps{
-	         step([$class: 'KubernetesEngineBuilder', projectId: env.project_id, clusterName: env.cluster_name, location: env.location, manifestPattern: 'deployment.yaml', credentialsId: env.credentials_id, verifyDeployments: true])
-            }
-        }
-    }
+	       stage('KCE Deployment') {
+		  steps{
+		      bat "kubectl apply -f deployment_namespace.yaml"
+		  }
+		}
+   	 }
 		post {
 			always {
 				echo "Test Report Generation Step"
