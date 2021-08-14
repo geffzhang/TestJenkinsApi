@@ -1,1 +1,45 @@
-
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: dotnet-app-ns
+  labels:
+    name: dotnet-app-ns
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-app-deployment
+  namespace: dotnet-app-ns
+  labels:
+    app: dotnet-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dotnet-app
+  template:
+    metadata:
+      labels:
+        app: dotnet-app
+    spec:
+      containers:
+        - name: dotnet-app
+          image: rajivgogia/productmanagementapi:latest
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dotnet-app-lb-service
+  namespace: dotnet-app-ns
+spec:
+  type: LoadBalancer
+  selector: 
+    app: dotnet-app
+  ports:    
+  - protocol: TCP
+    port: 80
+    targetPort: 30158
