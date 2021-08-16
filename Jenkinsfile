@@ -99,7 +99,7 @@ pipeline {
 		
 	       stage('KCE Deployment') {
 		  steps{
-		      bat "kubectl apply -f deployment_namespace"
+		      bat "kubectl apply -f deployment_namespace.yaml"
 		  }
 		}
    	 }
