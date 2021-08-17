@@ -99,7 +99,7 @@ pipeline {
 		
 	       stage('KCE Deployment') {
 		  steps{
-		      bat "kubectl apply -f deployment_namespace.yaml"
+		      bat "kubectl apply -f deployment_loadbalancer.yaml"
 		  }
 		}
    	 }
