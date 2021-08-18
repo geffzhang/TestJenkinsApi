@@ -4,13 +4,9 @@ pipeline {
 	environment {
 		scannerHome = tool name: 'sonar_scanner_dotnet'
 		registry = 'rajivgogia/productmanagementapi'
-		properties = null 	
 		username = 'rajivgogia'
-        	project_id = 'testjenkinsapi-319316'
-       		cluster_name = 'dotnet-api-namespace'
-        	location = 'us-central1-c'
-        	credentials_id = 'TestJenkinsApi'
-   	}	
+        appName = "ProductManagementApi"
+    }	
    
 	options {
         //Prepend all console output generated during stages with the time at which the line was emitted.
@@ -23,90 +19,125 @@ pipeline {
 		skipDefaultCheckout()
 		
 		buildDiscarder(logRotator(
-			// number of build logs to keep
-            numToKeepStr:'3',
-            // history to keep in days
-            daysToKeepStr: '15'
+		// number of build logs to keep
+			    numToKeepStr:'3',
+        // history to keep in days
+			    daysToKeepStr: '15'
 			))
     }
     
     stages {
         
-        stage('Checkout') {
+        stage ("nuget restore") {
             steps {
-			checkout scm	  
-	     }
-	}
-		
-		stage('nuget restore'){
-            steps{
-				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']}"
-                  echo "Nuget Restore Step"
-                  bat "dotnet restore"
+                //Initial message
+                echo "Deployment pipeline started for - ${BRANCH_NAME} branch"
+
+                echo "Nuget Restore step"
+                bat "dotnet restore"
             }
         }
-		
-		stage('Start sonarqube analysis'){
+
+        stage ("Start sonarqube analysis") {
+            when {
+                branch "master"
+            }
             steps {
-				  echo "Start sonarqube analysis step"
-                  withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
-                  }
+                echo "Start sonarqube analysis step"
+                withSonarQubeEnv ("Test_Sonar") {
+                    bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:sonar-${userName} /n:sonar-${userName} /v:1.0"
+                }
             }
         }
 
         stage('Code build') {
             steps {
-				  //Cleans the output of a project
+                //Cleans the output of a project
 				  echo "Clean Previous Build"
                   bat "dotnet clean"
-				  
-				  //Builds the project and all of its dependencies
+                //Builds the project and all of its dependencies
                   echo "Code Build"
-                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'		      
+                  bat 'dotnet build -c Release -o "${appName}/app/build"'
             }
         }
 
-		stage('Stop sonarqube analysis'){
-			steps {
-				   echo "Stop sonarqube analysis"
-                   withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
-                   }
+        stage ("Stop sonarqube analysis") {
+            when {
+                branch "master"
             }
-        }
-		stage('Docker Image') {
-		  steps{
-			echo "Docker Image Step"
-			bat 'dotnet publish -c Release'
-			bat "docker build -t i_${username}_master --no-cache -f Dockerfile ."
-		  }
-		}
-		
-		stage('Move Image to Docker Hub') {
-          steps{
-		    bat "docker tag i_${username}_master ${registry}:${BUILD_NUMBER}"
-                    bat "docker tag i_${username}_master ${registry}:latest"
 
-		    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
-			    
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
-                    bat "docker push ${registry}:latest"
-            	    
-		    }
+            steps {
+                echo "Stop sonarqube analysis step"
+                withSonarQubeEnv ("Test_Sonar") {
+                    bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
+                }
             }
         }
-		
-	       stage('KCE Deployment') {
+
+        stage ("Release artifact") {
+            when {
+                branch "develop"
+            }
+
+            steps {
+                echo "Release artifact step"
+                bat "dotnet publish -c Release -o ${appName}/app/${userName}"
+            }
+        }
+
+        stage ("Docker Image") {
+            steps {
+                //For master publish before creating docker image
+                script {
+                    if (BRANCH_NAME == "master") {
+                        bat "dotnet publish -c Release -o ${appName}/app/${userName}"
+                    }
+                }
+                echo "Docker Image step"
+                bat "docker build -t i-${userName}-${BRANCH_NAME} --no-cache -f Dockerfile ."
+            }
+        }
+
+        stage ("Containers") {
+            failFast true
+            parallel {
+                stage ("PrecontainerCheck") {
+                    steps {
+                        echo "PrecontainerCheck step"
+                        script {
+                            def containerId = powershell (returnStdout: true, script: "docker ps -a | Select-String c-${userName}-${BRANCH_NAME} | %{ (\$_ -split \" \")[0]}")
+                            if (containerId != null && containerId != "") {
+                                bat "docker stop ${containerId}"
+                                bat "docker rm -f ${containerId}"
+                            }
+                        }
+                    }
+                }
+
+                stage ("PushtoDTR") {
+                    steps {
+                        echo "PushtoDTR step"
+                       
+                        bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
+                        bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}-latest"
+
+                        withDockerRegistry([credentialsId: 'DockerHub', url: ""
+                            ]) {
+                            
+                                bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
+                                bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-latest"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('KCE Deployment') {
 		  steps{
-		      bat "kubectl apply -f deployment_loadbalancer.yaml"
-		  }
-		}
-   	 }
-		post {
-			always {
-				echo "Test Report Generation Step"
-				xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
-			}
-		}
+		      bat "kubectl apply -f deployment_namespace.yaml"
+            }
+        }
+    }
+		
 }
