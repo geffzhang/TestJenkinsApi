@@ -131,5 +131,20 @@ pipeline {
                 }
             }
         }
+
+        stage ("Docker deployment") {
+            steps {
+                echo "Docker deployment step"
+                bat "docker run --name c-${userName}-${BRANCH_NAME} -d -p ${getDockerPort(BRANCH_NAME)}:80 ${registry}/i-${userName}-${BRANCH_NAME}"
+            }
+        }
    	 }		
+}
+
+Integer getDockerPort (branchName) {
+    if (branchName.equalsIgnoreCase ("master")) {
+        return 7200
+    } else {
+        return 7300
+    }
 }
