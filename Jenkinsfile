@@ -125,9 +125,7 @@ pipeline {
                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}:${BUILD_NUMBER}"
                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}:latest"
 
-                        withDockerRegistry([credentialsId: 'DockerHub', url: ""
-                            ]) {
-                            
+                        withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
                                 bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}:${BUILD_NUMBER}"
                                 bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}:latest"
                             }
