@@ -37,6 +37,18 @@ pipeline {
                 bat "dotnet restore"
             }
         }
+		
+        stage ("Start sonarqube analysis") {
+            when {
+                branch "master"
+            }
+            steps {
+                echo "Start sonarqube analysis step"
+                withSonarQubeEnv('Test_Sonar') {
+                     bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
+                }
+            }
+        }	
       
     }
 }
