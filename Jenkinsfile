@@ -39,9 +39,6 @@ pipeline {
         }
 		
         stage ("Start sonarqube analysis") {
-            when {
-                branch "master"
-            }
             steps {
                 echo "Start sonarqube analysis step"
                 withSonarQubeEnv('Test_Sonar') {
@@ -62,10 +59,6 @@ pipeline {
         }
 
         stage ("Stop sonarqube analysis") {
-            when {
-                branch "master"
-            }
-
             steps {
                 echo "Stop sonarqube analysis step"
                 withSonarQubeEnv ("Test_Sonar") {
