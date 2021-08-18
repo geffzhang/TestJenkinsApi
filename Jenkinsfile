@@ -4,12 +4,7 @@ pipeline {
 	environment {
 		scannerHome = tool name: 'sonar_scanner_dotnet'
 		registry = 'rajivgogia/productmanagementapi'
-		properties = null 	
 		username = 'rajivgogia'
-        	project_id = 'testjenkinsapi-319316'
-       		cluster_name = 'dotnet-api-namespace'
-        	location = 'us-central1-c'
-        	credentials_id = 'TestJenkinsApi'
    	}	
    
 	options {
@@ -32,13 +27,7 @@ pipeline {
     
     stages {
         
-        stage('Checkout') {
-            steps {
-			checkout scm	  
-	     }
-	}
-		
-		stage('nuget restore'){
+    	stage('nuget restore'){
             steps{
 				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']}"
                   echo "Nuget Restore Step"
