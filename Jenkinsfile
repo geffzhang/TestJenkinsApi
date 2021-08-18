@@ -59,7 +59,19 @@ pipeline {
                   echo "Code Build"
                   bat 'dotnet build -c Release -o "${appName}/app/build"'
             }
+        }
+
+        stage ("Stop sonarqube analysis") {
+            when {
+                branch "master"
+            }
+
+            steps {
+                echo "Stop sonarqube analysis step"
+                withSonarQubeEnv ("Test_Sonar") {
+                    bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
+                }
+            }
         }	
-      
     }
 }
