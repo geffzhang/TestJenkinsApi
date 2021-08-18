@@ -74,6 +74,30 @@ pipeline {
                    }
             }
         }
+
+        stage ("Release artifact") {
+            when {
+                branch "develop"
+            }
+
+            steps {
+                echo "Release artifact step"
+                bat "dotnet publish -c Release -o ${appName}/app/${userName}"
+            }
+        }
+
+        stage ("Docker Image") {
+            steps {
+                //For master publish before creating docker image
+                script {
+                    if (BRANCH_NAME == "master") {
+                        bat "dotnet publish -c Release -o ${appName}/app/${userName}"
+                    }
+                }
+                echo "Docker Image step"
+                bat "docker build -t i-${userName}-${BRANCH_NAME} --no-cache -f Dockerfile ."
+            }
+        }
 		
    	 }		
 }
