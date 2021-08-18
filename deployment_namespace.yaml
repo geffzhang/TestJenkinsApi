@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: dotnet-app
-          image: rajivgogia/productmanagementapi:latest
+          image: rajivgogia/productmanagementapi:i-rajivgogia-master-latest
           ports:
             - name: http
               containerPort: 80
