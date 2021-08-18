@@ -30,9 +30,11 @@ pipeline {
         
     	stage ("nuget restore") {
             steps {
+		    
                 //Initial message
                 echo "Deployment pipeline started for - ${BRANCH_NAME} branch"
-
+		    
+		checkout scm
                 echo "Nuget Restore step"
                 bat "dotnet restore"
             }
