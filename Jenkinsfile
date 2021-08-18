@@ -75,33 +75,7 @@ pipeline {
                    }
             }
         }
-		stage('Docker Image') {
-		  steps{
-			echo "Docker Image Step"
-			bat 'dotnet publish -c Release'
-			bat "docker build -t i_${username}_master --no-cache -f Dockerfile ."
-		  }
-		}
 		
-		stage('Move Image to Docker Hub') {
-          steps{
-		    bat "docker tag i_${username}_master ${registry}:${BUILD_NUMBER}"
-                    bat "docker tag i_${username}_master ${registry}:latest"
-
-		    withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
-			    
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
-                    bat "docker push ${registry}:latest"
-            	    
-		    }
-            }
-        }
-		
-	       stage('KCE Deployment') {
-		  steps{
-		      bat "kubectl apply -f deployment_loadbalancer.yaml"
-		  }
-		}
    	 }
 		post {
 			always {
