@@ -4,10 +4,9 @@ pipeline {
 	environment {
 		scannerHome = tool name: 'sonar_scanner_dotnet'
 		registry = 'rajivgogia/productmanagementapi'
-		properties = null 	
-		docker_port = null
 		username = 'rajivgogia'
-   }
+        appName = 'ProductManagementApi'
+   	}	
    
 	options {
         //Prepend all console output generated during stages with the time at which the line was emitted.
@@ -29,45 +28,27 @@ pipeline {
     
     stages {
         
-        stage('Start') {
+    	stage ("nuget restore") {
             steps {
-				  //Welcome message
-				  echo "hello! I'm in ${BRANCH_NAME} environment"
-                  checkout scm
-
-				  script{
-				  
-					  //docker port allocation as per branch name
-					  if(BRANCH_NAME == "master")
-					  {
-						docker_port = 6000
-					  } else if(BRANCH_NAME == "develop")
-					  {
-						docker_port = 6100
-					  }
-					  
-					  //load user.properties file
-					  properties = readProperties file: 'user.properties'
-				  }
-            }
-		}
-		stage('nuget restore'){
-            steps{
-				  echo "Running build ${JOB_NAME} # ${BUILD_NUMBER} for ${properties['user.employeeid']} with docker as ${docker_port}"
-                  echo "Nuget Restore Step"
-                  bat "dotnet restore"
+		    
+                //Initial message
+                echo "Deployment pipeline started for - ${BRANCH_NAME} branch"
+		    
+		        checkout scm
+                echo "Nuget Restore step"
+                bat "dotnet restore"
             }
         }
+		
 		stage('Start sonarqube analysis'){
-			
-			when {
-                branch 'master'
+            when {
+                branch "master"
             }
-			
+
             steps {
 				  echo "Start sonarqube analysis step"
                   withSonarQubeEnv('Test_Sonar') {
-                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:ProductManagementApi /n:ProductManagementApi /v:1.0"
+                   bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:sonar-${userName} /n:sonar-${userName} /v:1.0"
                   }
             }
         }
@@ -80,13 +61,13 @@ pipeline {
 				  
 				  //Builds the project and all of its dependencies
                   echo "Code Build"
-                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'
+                  bat 'dotnet build -c Release -o "ProductManagementApi/app/build"'		      
             }
         }
 
 		stage('Stop sonarqube analysis'){
-			when {
-                branch 'master'
+             when {
+                branch "master"
             }
             
 			steps {
@@ -96,68 +77,79 @@ pipeline {
                    }
             }
         }
-		
-		stage('Release Artifacts'){
-			when {
-                branch 'develop'
+
+        stage ("Release artifact") {
+            when {
+                branch "develop"
             }
-			
-            steps{
-			   echo "Release Artifacts"
-               bat 'dotnet publish -c Release'
+
+            steps {
+                echo "Release artifact step"
+                bat "dotnet publish -c Release -o ${appName}/app/${userName}"
             }
         }
-		
-		stage('Docker Image') {
-		  steps{
-			echo "Docker Image Step"
-			bat "docker build -t i_${username}_${BRANCH_NAME} --no-cache -f Dockerfile ."
-		  }
-		}
-		
-		//stage('Change latest build tag Image') {
-		  //steps{
-			//   bat "docker tag ${registry}:${BUILD_NUMBER} ${registry}:latest"
-		  //}
-		//}
-		
-		stage('Move Image to Docker Private Registry') {
-          steps{
-					echo "Move Image to Docker Private Registry"
-                    withDockerRegistry([credentialsId: 'Docker', url: ""]) {
-                    bat "docker push ${registry}:${BUILD_NUMBER}"
+
+        stage ("Docker Image") {
+            steps {
+                //For master publish before creating docker image
+                script {
+                    if (BRANCH_NAME == "master") {
+                        bat "dotnet publish -c Release -o ${appName}/app/${userName}"
+                    }
+                }
+                echo "Docker Image step"
+                bat "docker build -t i-${userName}-${BRANCH_NAME} --no-cache -f Dockerfile ."
+            }
+        }
+
+        stage ("Containers") {
+            failFast true
+            parallel {
+                stage ("PrecontainerCheck") {
+                    steps {
+                        echo "PrecontainerCheck step"
+                        script {
+                            def containerId = powershell (returnStdout: true, script: "docker ps -a | Select-String c-${userName}-${BRANCH_NAME} | %{ (\$_ -split \" \")[0]}")
+                            if (containerId != null && containerId != "") {
+                                bat "docker stop ${containerId}"
+                                bat "docker rm -f ${containerId}"
+                            }
+                        }
+                    }
+                }
+
+                stage ("PushtoDTR") {
+                    steps {
+                        echo "PushtoDTR step"
+                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
+                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}-latest"
+
+                        bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
+                        bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-latest"
+                    }
                 }
             }
         }
-		
-        stage('Docker -- Stop & Removing Running Container') {
-          steps{
-					echo "Docker -- Stop & Removing Running Container"
-					script {
-						//def containerId = powershell(returnStdout: true, script: "docker ps -f name=ProductManagementApi   | Select-String 5000 | %{ (\$_ -split \" \")[0]}");
-						def containerId = powershell(returnStdout: true, script: "docker ps | Select-String ${username} | %{ (\$_ -split \" \")[0]}");
-						if(containerId!= null && containerId!="") {
-						//bat "docker stop ProductManagementApi"
-						//bat "docker rm -f ProductManagementApi"
-						bat "docker stop ${containerId}"
-						bat "docker rm -f ${containerId}"
-						}	
-					}
-		  }
-		}		  
-	  
-		stage('Docker Deployment') {
-          steps{
-					echo "Docker Deployment"
-                    bat "docker run --name ProductManagementApi -d -p ${username}:80 ${registry}:${BUILD_NUMBER}"
-          }
-        } 
-		
+
+        stage ("Docker deployment") {
+            steps {
+                echo "Docker deployment step"
+                bat "docker run --name c-${userName}-${BRANCH_NAME} -d -p ${getDockerPort(BRANCH_NAME)}:80 ${registry}:i-${userName}-${BRANCH_NAME}-latest"
+            }
         }
-		post {
-			always {
-				echo "Test Report Generation Step"
-				xunit([MSTest(deleteOutputFiles: true, failIfNotNew: true, pattern: 'ProductManagementApi-tests\\TestResults\\ProductManagementApiTestOutput.xml', skipNoTestFiles: true, stopProcessingIfError: true)])
-			}
+
+         stage('Kubernetes Deployment') {
+		  steps{
+		      bat "kubectl apply -f deployment_namespace.yaml"
+		  }
 		}
+   	 }		
+}
+
+Integer getDockerPort (branchName) {
+    if (branchName.equalsIgnoreCase ("master")) {
+        return 7200
+    } else {
+        return 7300
+    }
 }
