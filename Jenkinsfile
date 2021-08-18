@@ -121,12 +121,11 @@ pipeline {
                 stage ("PushtoDTR") {
                     steps {
                         echo "PushtoDTR step"
-
-                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:${BUILD_NUMBER}"
+                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:${userName}-${BRANCH_NAME}${BUILD_NUMBER}"
                          bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:latest"
 
-                        bat "docker push ${registry}:${BUILD_NUMBER}"
-                        bat "docker push ${registry}:latest"
+                        bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
+                        bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-latest"
                     }
                 }
             }
