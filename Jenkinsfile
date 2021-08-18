@@ -5,6 +5,7 @@ pipeline {
 		scannerHome = tool name: 'sonar_scanner_dotnet'
 		registry = 'rajivgogia/productmanagementapi'
 		username = 'rajivgogia'
+        appName = 'ProductManagementApi'
    	}	
    
 	options {
