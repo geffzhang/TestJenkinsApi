@@ -27,10 +27,13 @@ pipeline {
     
     stages {
         
-    	stage('nuget restore'){
-            steps{
-                  echo "Nuget Restore Step"
-                  bat "dotnet restore"
+    	stage ("nuget restore") {
+            steps {
+                //Initial message
+                echo "Deployment pipeline started for - ${BRANCH_NAME} branch"
+
+                echo "Nuget Restore step"
+                bat "dotnet restore"
             }
         }
 		
