@@ -98,7 +98,7 @@ pipeline {
                     }
                 }
                 echo "Docker Image step"
-                bat "docker build -t i-${userName}-${BRANCH_NAME} --no-cache -f Dockerfile ."
+                bat "docker build -t i-${userName}-${BRANCH_NAME}:${BUILD_NUMBER} --no-cache -f Dockerfile ."
             }
         }
 
@@ -121,8 +121,8 @@ pipeline {
                 stage ("PushtoDTR") {
                     steps {
                         echo "PushtoDTR step"
-                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
-                         bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}-latest"
+                         bat "docker tag i-${userName}-${BRANCH_NAME}:${BUILD_NUMBER} ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
+                         bat "docker tag i-${userName}-${BRANCH_NAME}:${BUILD_NUMBER} ${registry}:i-${userName}-${BRANCH_NAME}-latest"
 
                         bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-${BUILD_NUMBER}"
                         bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}-latest"
