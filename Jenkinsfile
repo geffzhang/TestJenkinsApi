@@ -117,7 +117,18 @@ pipeline {
                         }
                     }
                 }
-                
+
+                stage ("PushtoDTR") {
+                    steps {
+                        echo "PushtoDTR step"
+
+                         bat "docker tag i_${username}-${BRANCH_NAME} ${registry}:${BUILD_NUMBER}"
+                         bat "docker tag i_${username}-${BRANCH_NAME} ${registry}:latest"
+
+                        bat "docker push ${registry}:${BUILD_NUMBER}"
+                        bat "docker push ${registry}:latest"
+                    }
+                }
             }
         }
    	 }		
