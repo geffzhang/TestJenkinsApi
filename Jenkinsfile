@@ -37,6 +37,42 @@ pipeline {
                 bat "dotnet restore"
             }
         }
+	    
+	stage ("Start sonarqube analysis") {
+            when {
+                branch "master"
+            }
+            steps {
+                echo "Start sonarqube analysis step"
+                withSonarQubeEnv ("Test_Sonar") {
+                    bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:sonar-${userName} /n:sonar-${userName} /v:1.0"
+                }
+            }
+        }
+
+        stage('Code build') {
+            steps {
+                //Cleans the output of a project
+	          echo "Clean Previous Build"
+                  bat "dotnet clean"
+                //Builds the project and all of its dependencies
+                  echo "Code Build"
+                  bat 'dotnet build -c Release -o "${appName}/app/build"'
+            }
+        }
+
+        stage ("Stop sonarqube analysis") {
+            when {
+                branch "master"
+            }
+
+            steps {
+                echo "Stop sonarqube analysis step"
+                withSonarQubeEnv ("Test_Sonar") {
+                    bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
+                }
+            }
+        }
       
     }
 		
