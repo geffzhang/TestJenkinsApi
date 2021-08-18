@@ -134,9 +134,15 @@ pipeline {
         stage ("Docker deployment") {
             steps {
                 echo "Docker deployment step"
-                bat "docker run --name c-${userName}-${BRANCH_NAME} -d -p ${getDockerPort(BRANCH_NAME)}:80 ${registry}/i-${userName}-${BRANCH_NAME}-latest"
+                bat "docker run --name c-${userName}-${BRANCH_NAME} -d -p ${getDockerPort(BRANCH_NAME)}:80 ${registry}:i-${userName}-${BRANCH_NAME}-latest"
             }
         }
+
+         stage('KCE Deployment') {
+		  steps{
+		      bat "kubectl apply -f deployment_namespace.yaml"
+		  }
+		}
    	 }		
 }
 
