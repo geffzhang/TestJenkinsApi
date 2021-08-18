@@ -33,7 +33,6 @@ pipeline {
 		    
                 //Initial message
                 echo "Deployment pipeline started for - ${BRANCH_NAME} branch"
-		    
 		        checkout scm
                 echo "Nuget Restore step"
                 bat "dotnet restore"
@@ -91,7 +90,7 @@ pipeline {
 
         stage ("Docker Image") {
             steps {
-                //For master publish before creating docker image
+                //For master branch, publish before creating docker image
                 script {
                     if (BRANCH_NAME == "master") {
                         bat "dotnet publish -c Release -o ${appName}/app/${userName}"
