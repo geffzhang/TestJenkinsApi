@@ -99,6 +99,41 @@ pipeline {
                 bat "docker build -t i-${userName}-${BRANCH_NAME} --no-cache -f Dockerfile ."
             }
         }
+
+        stage ("Containers") {
+            failFast true
+            parallel {
+                stage ("PrecontainerCheck") {
+                    steps {
+                        echo "PrecontainerCheck step"
+                        script {
+                            def containerId = powershell (returnStdout: true, script: "docker ps -a | Select-String c-${userName}-${BRANCH_NAME} | %{ (\$_ -split \" \")[0]}")
+                            if (containerId != null && containerId != "") {
+                                bat "docker stop ${containerId}"
+                                bat "docker rm -f ${containerId}"
+                            }
+                        }
+                    }
+                }
+
+                stage ("PushtoDTR") {
+                    steps {
+                        echo "PushtoDTR step"
+                       
+                        bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}:${BUILD_NUMBER}"
+                        bat "docker tag i-${userName}-${BRANCH_NAME} ${registry}:i-${userName}-${BRANCH_NAME}:latest"
+
+                        withDockerRegistry([credentialsId: 'DockerHub', url: ""
+                            ]) {
+                            
+                                bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}:${BUILD_NUMBER}"
+                                bat "docker push ${registry}:i-${userName}-${BRANCH_NAME}:latest"
+                            }
+                        }
+                    }
+                }
+            }
+        }
 		
    	 }		
 }
