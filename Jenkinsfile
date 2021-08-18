@@ -138,7 +138,7 @@ pipeline {
             }
         }
 
-         stage('KCE Deployment') {
+         stage('Kubernetes Deployment') {
 		  steps{
 		      bat "kubectl apply -f deployment_namespace.yaml"
 		  }
